@@ -26,9 +26,20 @@
       </div>
     {% endif %}
 
-    <li><a href=" {{ post.paperurl }} ">{{ title }}</a>
+    <li><strong>{{ title }}
+    {% if post.supp %}
+    <font color=red> (Oral)</font>
+    {% endif %}
+    </strong>
     <br>{{ post.authors }}
-    <br>Published in <i>{{ post.venue }}</i>, {{ post.date | default: "1900-01-01" | date: "%Y" }} 
+    <br>Published in <i>{{ post.venue }}</i>, {{ post.date | default: "1900-01-01" | date: "%Y" }}
+    <br>[<a href=" {{ post.paperurl }} ">PDF</a>]
+    {% if post.supp %}
+    [<a href=" {{ post.supp }} ">Supp</a>]
+    {% endif %}
+    {% if post.code %}
+    [<a href=" {{ post.code }} ">Code</a>]
+    {% endif %}
     </li>
 
   </article>

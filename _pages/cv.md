@@ -10,9 +10,9 @@ redirect_from:
 
 Education
 ======
-* Ph.D in Computing, [University of Portsmouth](https://www.port.ac.uk), 2023 (Expected)
-* M.S. in Software Engineering, [National University of Singapore](https://nus.edu.sg), 2019
-* B.S. in Software Engineering, [Fudan University](https://www.fudan.edu.cn), 2015
+* Ph.D in Computing, [University of Portsmouth](https://researchportal.port.ac.uk/en/studentTheses/approximate-nearest-neighbor-search-with-hashing-and-quantization), 2023
+* M.S. in Software Engineering, [National University of Singapore](https://nus-csm.symplicity.com/profiles/weixiang.hong), 2019
+* B.S. in Software Engineering, [Fudan University](http://fdjpkc.fudan.edu.cn/d201348/13198/list.htm), 2015
 
 Work Experience
 ======
@@ -36,7 +36,7 @@ Visiting and Internship
 * Mar. 2015 – May 2015: **Visiting Student**, [Nanyang Technological University](https://www.ntu.edu.sg), Singapore
   * Affiliated to [Nestia Pte Ltd](https://www.nestia.com)
 
-Awards
+Award
 ======
 * In 2022, my colleagues and I won [first place](http://weixianghong.github.io/files/Agriculture_Vision/Certificate_AntGroup_AgVis1.pdf) in the Agriculture-Vision Prize Challenge, [second place]((http://weixianghong.github.io/files/Agriculture_Vision/Certificate_AntGroup_CH2.pdf)) in the Crop Harvest Challenge, at CVPR 2022.
 * In 2021, I was selected as [Top 100 Young Chinese Scholar in AI](https://xueshu.baidu.com/usercenter/index/aischolar) by Baidu.
@@ -44,4 +44,9 @@ Awards
 Service
 ======
 * Journal Reviewer: T-PAMI, T-IP, AI
-* Conference Reviewer: CVPR'20 21 23, AAAI'22 23, ICCV'23, ICIP'23, ICME'19
+* Conference Reviewer: ICME'19, CVPR'20 21 23, AAAI'22 23, ICIP'23, ICCV'23
+
+Patent
+======
+* [CN113076433](https://patents.google.com/patent/CN113076433A/en?oq=CN113076433) - 具有多模态信息的检索对象的检索方法和装置
+* [CN111524150](https://patents.google.com/patent/CN111524150A/en?oq=CN111524150) - 图像处理的方法及装置

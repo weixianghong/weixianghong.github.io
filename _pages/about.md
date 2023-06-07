@@ -7,6 +7,6 @@ redirect_from:
   - /about.html
 ---
 
-I am a Machine Learning Engineer with Meta.
+I am a Machine Learning Engineer with Meta Ads, working on identity matching.
 
-Last updated: Feb. 27, 2023
+Last updated: Jun. 7, 2023

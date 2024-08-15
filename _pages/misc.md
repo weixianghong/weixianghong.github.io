@@ -15,8 +15,8 @@ Personal
 Interests
 ======
 * Playing sports:
-  * Enjoy: basketball > badminton > hiking > swimming
-  * Do not like: table tennis
+  * Enjoy: basketball > tennis > badminton > hiking > swimming
+  * Do not like: ping-pong
 
 * Watching Bilibili/YouTube videos (to help me sleep), e.g., gaming videos (Dota 1, Red Alert 2, Warcraft 3), car review, vlogs, etc.
 

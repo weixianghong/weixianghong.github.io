@@ -1,12 +1,26 @@
 ---
 title: 'From LLM to Agent: Why Token-In-Token-Out Is Not Enough'
 date: 2026-03-25
+read_time: true
 tags:
   - llm
   - agent
   - rag
   - mcp
   - engineering
+---
+
+**Table of Contents**
+* [The Fundamental Limitation: Stateless Text Generation](#the-fundamental-limitation-stateless-text-generation)
+* [RAG: Giving the Model Knowledge It Doesn't Have](#rag-giving-the-model-knowledge-it-doesnt-have)
+* [Tool Use: From Talking to Doing](#tool-use-from-talking-to-doing)
+* [MCP: A Standard Interface for Tools](#mcp-a-standard-interface-for-tools)
+* [Skills: Reusable Task Patterns](#skills-reusable-task-patterns)
+* [The Agent: Putting It All Together](#the-agent-putting-it-all-together)
+* [Harness Engineering: The Invisible Layer](#harness-engineering-the-invisible-layer)
+* [The Full Stack](#the-full-stack)
+* [What's Next](#whats-next)
+
 ---
 
 Large Language Models are impressive. They can write code, summarize papers, and hold conversations that feel remarkably human. But once you move past the demo and try to build something real, you quickly hit a wall: **an LLM, at its core, is just token-in, token-out.** You give it text, it gives you text back. That's it.

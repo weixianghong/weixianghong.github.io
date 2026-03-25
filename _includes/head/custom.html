@@ -35,4 +35,114 @@
 </script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/latest.js?config=TeX-MML-AM_CHTML' async></script>
 
+<!-- Dark mode styles -->
+<style>
+  [data-theme="dark"] {
+    background-color: #1a1a2e;
+    color: #e0e0e0;
+  }
+  [data-theme="dark"] body {
+    color: #e0e0e0;
+  }
+  [data-theme="dark"] a {
+    color: #6db3f2;
+  }
+  [data-theme="dark"] a:visited {
+    color: #8cc4f7;
+  }
+  [data-theme="dark"] .masthead {
+    background-color: #16213e;
+    border-bottom-color: #0f3460;
+  }
+  [data-theme="dark"] .greedy-nav {
+    background: #16213e;
+  }
+  [data-theme="dark"] .greedy-nav a {
+    color: #e0e0e0;
+  }
+  [data-theme="dark"] .greedy-nav a:hover {
+    color: #6db3f2;
+  }
+  [data-theme="dark"] .page__footer {
+    background-color: #0f3460;
+    border-top-color: #1a1a5e;
+    color: #b0b0b0;
+  }
+  [data-theme="dark"] .page__content h2 {
+    border-bottom-color: #333;
+  }
+  [data-theme="dark"] .author__urls {
+    background: #16213e;
+    border-color: #333;
+  }
+  [data-theme="dark"] .author__urls:after {
+    border-color: #16213e transparent;
+  }
+  [data-theme="dark"] .author__urls:before {
+    border-color: #333 transparent;
+  }
+  [data-theme="dark"] .author__avatar img {
+    border-color: #333;
+  }
+  [data-theme="dark"] .btn--inverse {
+    background-color: #333;
+    color: #e0e0e0;
+    border-color: #555;
+  }
+  [data-theme="dark"] hr {
+    border-top-color: #333;
+  }
+  [data-theme="dark"] blockquote {
+    border-left-color: #555;
+  }
+  [data-theme="dark"] p > code,
+  [data-theme="dark"] a > code,
+  [data-theme="dark"] li > code,
+  [data-theme="dark"] td > code {
+    background: #2a2a3e;
+    border-color: #444;
+  }
+  [data-theme="dark"] .page__related {
+    border-top-color: #333;
+  }
+  [data-theme="dark"] .page__share {
+    border-top-color: #333;
+  }
+  [data-theme="dark"] .page__taxonomy-item {
+    border-color: #444;
+  }
+  [data-theme="dark"] .page__comments-form {
+    background: #2a2a3e;
+  }
+  [data-theme="dark"] .page__comments-title {
+    border-top-color: #333;
+  }
+
+  /* Dark mode toggle button */
+  .dark-mode-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.2em;
+    padding: 4px 8px;
+    margin-left: 8px;
+    color: inherit;
+    vertical-align: middle;
+    line-height: 1;
+  }
+  .dark-mode-toggle:hover {
+    opacity: 0.7;
+  }
+</style>
+
+<!-- Prevent flash of wrong theme -->
+<script>
+  (function() {
+    var theme = localStorage.getItem('theme');
+    if (theme === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+    }
+  })();
+</script>
+
 <!-- end custom head snippets -->

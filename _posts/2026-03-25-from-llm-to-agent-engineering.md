@@ -12,10 +12,13 @@ tags:
 
 **Table of Contents**
 * [The Fundamental Limitation: Stateless Text Generation](#the-fundamental-limitation-stateless-text-generation)
+* [Tackling the Memory Problem](#tackling-the-memory-problem)
 * [RAG: Giving the Model Knowledge It Doesn't Have](#rag-giving-the-model-knowledge-it-doesnt-have)
 * [Tool Use: From Talking to Doing](#tool-use-from-talking-to-doing)
 * [MCP: A Standard Interface for Tools](#mcp-a-standard-interface-for-tools)
+* [Deep Dive: MCP in Action](#deep-dive-mcp-in-action)
 * [Skills: Reusable Task Patterns](#skills-reusable-task-patterns)
+* [Deep Dive: Anatomy of a Skill](#deep-dive-anatomy-of-a-skill)
 * [The Agent: Putting It All Together](#the-agent-putting-it-all-together)
 * [Harness Engineering: The Invisible Layer](#harness-engineering-the-invisible-layer)
 * [The Full Stack](#the-full-stack)
@@ -38,6 +41,22 @@ An LLM has no memory across calls. It cannot browse the web. It cannot run code.
 This is fine for answering "what is the capital of France?" It is not fine for "analyze our sales data from last quarter, identify trends, and update the dashboard."
 
 The gap between what an LLM *can* do (generate text) and what we *want* it to do (accomplish tasks) is where all the interesting engineering lives.
+
+## Tackling the Memory Problem
+
+<p align="center">
+  <img src="/images/blog/memory-solutions.png" alt="Memory Solutions" style="max-width:100%;">
+</p>
+
+One of the most immediate pain points is that an LLM **has no memory**. Each API call is independent — the model doesn't remember what you said 5 minutes ago, let alone last week. So how do current systems create the illusion of memory?
+
+**1. Context Window Management.** The simplest approach: stuff the conversation history into the prompt. Every time you send a message, the system prepends all previous messages so the model can "see" the conversation. This works until you hit the context window limit (e.g., 128K or 200K tokens). At that point, the system must decide what to keep and what to drop — typically using a sliding window or by summarizing older messages into a compressed form. This is why long coding sessions sometimes feel like the model "forgot" what it was doing — it literally did, because the harness compressed away earlier context.
+
+**2. Conversation History Storage.** Rather than keeping everything in the context window, systems can persist conversation history externally and selectively reload relevant parts. Think of it as a filing cabinet: the model's working memory (context window) is a small desk, and the conversation history is a cabinet you can pull files from. The harness decides which past exchanges are relevant to the current task and injects them.
+
+**3. External Memory Stores.** For true long-term memory — remembering user preferences, past decisions, project conventions — systems write to and read from external stores. This could be a vector database (semantic search over past interactions), a structured memory file (like `MEMORY.md` that persists across sessions), or a knowledge graph. The key insight: **memory is not a feature of the LLM; it's a feature of the system around it.**
+
+The important takeaway: when people say an AI "remembers" something, there's always an engineering system behind it managing what gets stored, retrieved, and injected into the prompt. The model itself remains stateless.
 
 ## RAG: Giving the Model Knowledge It Doesn't Have
 
@@ -82,6 +101,45 @@ MCP defines a common interface:
 
 With MCP, a tool provider implements the protocol once, and any MCP-compatible agent can use it. The integration cost drops from O(M×N) to O(M+N).
 
+## Deep Dive: MCP in Action
+
+<p align="center">
+  <img src="/images/blog/mcp-example.png" alt="MCP Example" style="max-width:100%;">
+</p>
+
+Let's trace through a concrete example. Suppose you ask an AI coding assistant: *"Find all Python files that import torch."*
+
+**Step 1: The agent receives your request** and passes it to the LLM along with a list of available tools (provided by MCP servers).
+
+**Step 2: The LLM decides** it needs to call the `search_files` tool. It outputs a structured JSON tool call:
+
+```json
+{
+  "tool": "search_files",
+  "parameters": {
+    "query": "import torch",
+    "pattern": "**/*.py"
+  }
+}
+```
+
+**Step 3: The harness sends this as an MCP request** to the filesystem MCP server. The request follows the standard MCP protocol — it doesn't matter whether the server is written in Python, TypeScript, or Rust. The protocol defines the wire format.
+
+**Step 4: The MCP server processes the request.** It validates the parameters against its schema, executes the search, and returns a structured response:
+
+```json
+{
+  "results": [
+    {"file": "model.py", "line": 3, "content": "import torch"},
+    {"file": "train.py", "line": 1, "content": "import torch.nn as nn"}
+  ]
+}
+```
+
+**Step 5: The agent feeds this result back to the LLM,** which can now reason about it — perhaps reading those files next, or answering your question directly.
+
+The key point: the agent doesn't know *how* `search_files` works internally. It only knows the tool's name, description, and parameter schema — all advertised through MCP's discovery mechanism. This is what makes the protocol composable: you can swap out the filesystem server for a GitHub server or a database server, and the agent doesn't need to change.
+
 ## Skills: Reusable Task Patterns
 
 Even with tools available, you often find the model repeating the same multi-step patterns. "Read the file, understand the context, make the edit, run the tests" — this sequence appears in almost every code modification task.
@@ -94,6 +152,41 @@ Even with tools available, you often find the model repeating the same multi-ste
 - How to validate the result
 
 Skills sit between the raw tool layer and the high-level user intent. They're not rigid scripts — the model still makes decisions within the skill — but they provide enough structure to make outcomes reliable and repeatable.
+
+## Deep Dive: Anatomy of a Skill
+
+<p align="center">
+  <img src="/images/blog/skill-example.png" alt="Skill Example" style="max-width:100%;">
+</p>
+
+Let's look at a concrete skill: **commit** — what happens when you type `/commit` in an AI coding assistant.
+
+Without a skill, the model would have to figure out from scratch: *What files changed? Should I stage them? What commit message convention does this repo use? Should I amend or create new?* It might get it right, or it might `git add -A` and commit your `.env` file.
+
+The commit skill encodes the right process:
+
+**Step 1: Gather Context** — The skill instructs the agent to run three commands in parallel:
+- `git status` — see what's changed
+- `git diff --staged` — see what's already staged
+- `git log --oneline -5` — see recent commit messages for style
+
+**Step 2: Analyze** — The LLM reads all the gathered context and makes decisions:
+- Which files to stage (specific files, not `git add -A`)
+- What commit message to write (matching the repo's existing style)
+- Whether anything looks suspicious (credentials, large binaries)
+
+**Step 3: Execute** — The agent runs the git commands:
+- `git add <specific files>`
+- `git commit -m "message"`
+- `git status` to verify success
+
+**Built-in Constraints** — The skill also encodes safety rules:
+- Never amend an existing commit unless explicitly asked
+- Never use `--no-verify` to skip hooks
+- Never commit files that look like secrets
+- If a pre-commit hook fails, fix the issue and create a *new* commit (don't `--amend` the previous one)
+
+This is the difference between a skill and a raw prompt. The prompt says "commit my changes." The skill says "here's exactly how to commit changes safely, with guardrails, following the conventions of this specific repository." The model still makes judgment calls — what to name the commit, which files to include — but within a structured, safe framework.
 
 ## The Agent: Putting It All Together
 

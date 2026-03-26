@@ -12,7 +12,6 @@ tags:
 
 **Table of Contents**
 * [The Fundamental Limitation: Stateless Text Generation](#the-fundamental-limitation-stateless-text-generation)
-* [Tackling the Memory Problem](#tackling-the-memory-problem)
 * [RAG: Giving the Model Knowledge It Doesn't Have](#rag-giving-the-model-knowledge-it-doesnt-have)
 * [Tool Use: From Talking to Doing](#tool-use-from-talking-to-doing)
 * [MCP: A Standard Interface for Tools](#mcp-a-standard-interface-for-tools)
@@ -38,25 +37,13 @@ This post walks through the logical progression from a raw LLM to a full agent s
 
 An LLM has no memory across calls. It cannot browse the web. It cannot run code. It cannot read your database. Every request starts from scratch — the model reads a prompt, produces a completion, and forgets everything.
 
-This is fine for answering "what is the capital of France?" It is not fine for "analyze our sales data from last quarter, identify trends, and update the dashboard."
+This is fine for answering "what is the capital of France?" It is not fine for "analyze our sales data from last quarter, identify trends, and update the dashboard." That task requires three things the LLM fundamentally lacks:
 
-The gap between what an LLM *can* do (generate text) and what we *want* it to do (accomplish tasks) is where all the interesting engineering lives.
+1. **Knowledge** — it doesn't have access to your sales data.
+2. **Memory** — it can't maintain state across a multi-step workflow.
+3. **Action** — it can't actually update a dashboard; it can only generate text *about* updating a dashboard.
 
-## Tackling the Memory Problem
-
-<p align="center">
-  <img src="/images/blog/memory-solutions.png" alt="Memory Solutions" style="max-width:100%;">
-</p>
-
-One of the most immediate pain points is that an LLM **has no memory**. Each API call is independent — the model doesn't remember what you said 5 minutes ago, let alone last week. So how do current systems create the illusion of memory?
-
-**1. Context Window Management.** The simplest approach: stuff the conversation history into the prompt. Every time you send a message, the system prepends all previous messages so the model can "see" the conversation. This works until you hit the context window limit (e.g., 128K or 200K tokens). At that point, the system must decide what to keep and what to drop — typically using a sliding window or by summarizing older messages into a compressed form. This is why long coding sessions sometimes feel like the model "forgot" what it was doing — it literally did, because the harness compressed away earlier context.
-
-**2. Conversation History Storage.** Rather than keeping everything in the context window, systems can persist conversation history externally and selectively reload relevant parts. Think of it as a filing cabinet: the model's working memory (context window) is a small desk, and the conversation history is a cabinet you can pull files from. The harness decides which past exchanges are relevant to the current task and injects them.
-
-**3. External Memory Stores.** For true long-term memory — remembering user preferences, past decisions, project conventions — systems write to and read from external stores. This could be a vector database (semantic search over past interactions), a structured memory file (like `MEMORY.md` that persists across sessions), or a knowledge graph. The key insight: **memory is not a feature of the LLM; it's a feature of the system around it.**
-
-The important takeaway: when people say an AI "remembers" something, there's always an engineering system behind it managing what gets stored, retrieved, and injected into the prompt. The model itself remains stateless.
+The rest of this post is about how each of these gaps gets filled — and why each solution naturally leads to the next.
 
 ## RAG: Giving the Model Knowledge It Doesn't Have
 
@@ -64,7 +51,7 @@ The important takeaway: when people say an AI "remembers" something, there's alw
   <img src="/images/blog/rag-pipeline.png" alt="RAG Pipeline" style="max-width:100%;">
 </p>
 
-The first problem people run into: **the model doesn't know about your data.** Its training has a cutoff date. It has never seen your internal docs, your codebase, or your Confluence pages.
+The first gap is **knowledge**. The model's training has a cutoff date. It has never seen your internal docs, your codebase, or your Confluence pages.
 
 The naive solution — fine-tuning — is expensive, slow, and goes stale. Retrieval-Augmented Generation (RAG) takes a different approach: instead of baking knowledge into the model's weights, you **retrieve relevant context at query time** and inject it into the prompt.
 
@@ -75,31 +62,47 @@ The pipeline looks like this:
 3. **Augment** the prompt with those chunks
 4. **Generate** a response grounded in real data
 
-RAG solves the knowledge problem, but it doesn't solve the action problem. The model can now *talk about* your data — but it still can't *do* anything with it.
+RAG solves the knowledge gap. But the model still can't *do* anything — it can now talk intelligently about your sales data, but it can't update the dashboard. That requires the ability to take action.
 
 ## Tool Use: From Talking to Doing
 
 The next logical step: let the model call functions. Instead of only generating text, the model outputs structured tool calls — "search the database," "send an email," "create a JIRA ticket" — and a runtime executes them.
 
-This is a significant shift. The model goes from being a text generator to being a **decision-maker** that can interact with external systems. But tool use alone introduces new problems:
+But wait — how does this actually work? The model is just generating text. It doesn't have a terminal. It can't run code. The answer: **the model doesn't execute anything itself.** It outputs a structured request (essentially JSON saying "I want to call this function with these arguments"), and the *system around it* handles execution. This separation — the model *decides*, the system *acts* — is fundamental to everything that follows.
+
+This is a significant shift. The model goes from being a text generator to being a **decision-maker**. But tool use alone introduces new problems:
 
 - **Who defines the tools?** Someone has to write the function signatures, descriptions, and implementations.
 - **How does the model discover them?** You can't stuff hundreds of tool definitions into every prompt.
-- **How do tools from different systems talk to each other?** A Slack tool and a GitHub tool might be built by different teams with different interfaces.
+- **How do tools from different systems interoperate?** A Slack tool and a GitHub tool might be built by different teams with different interfaces.
+
+This is where things used to get messy. Every AI application built its own tool integration layer, its own serialization format, its own error handling. Then MCP came along.
 
 ## MCP: A Standard Interface for Tools
 
-This is exactly the problem the Model Context Protocol (MCP) addresses. MCP provides a **standardized protocol** for connecting LLMs to external tools and data sources — think of it as a USB-C port for AI.
+<p align="center">
+  <img src="/images/blog/mcp-architecture.png" alt="MCP Architecture" style="max-width:100%;">
+</p>
 
-Before MCP, every integration was bespoke. Want to connect your model to GitHub? Write a custom adapter. Slack? Another adapter. Your internal API? Yet another one. Each with its own authentication, error handling, and schema format.
+The Model Context Protocol (MCP) provides a **standardized protocol** for connecting LLMs to external tools and data sources — think of it as USB-C for AI. Before MCP, every integration was bespoke. Want to connect your model to GitHub? Write a custom adapter. Slack? Another adapter. Your internal API? Yet another one.
 
-MCP defines a common interface:
+To understand MCP, you need to know three roles:
 
-- **Tools** — actions the model can take (e.g., `search_files`, `create_issue`)
-- **Resources** — data the model can read (e.g., file contents, database rows)
+**MCP Host** — the application you're using. This is Claude Code, Cursor, or any app that embeds an LLM. The host is what you interact with. It manages the LLM, the conversation, and the user experience.
+
+**MCP Client** — a component inside the host that speaks the MCP protocol. When the LLM decides to call a tool, the client routes that request to the right server. One host can have multiple clients connected to multiple servers simultaneously.
+
+**MCP Server** — a lightweight program that **exposes tools and actually executes them**. This is the key insight people miss: the MCP server is the execution layer. A filesystem server has access to your local files and can read, write, and search them. A GitHub server authenticates with the GitHub API and can create PRs, comment on issues, and review code. A database server connects to your database and runs queries. The LLM doesn't need a terminal — the MCP server *is* the runtime.
+
+Each server advertises what it can do through a standard discovery mechanism:
+
+- **Tools** — actions the server can perform (e.g., `search_files`, `create_issue`)
+- **Resources** — data the server can provide (e.g., file contents, database rows)
 - **Prompts** — reusable prompt templates
 
-With MCP, a tool provider implements the protocol once, and any MCP-compatible agent can use it. The integration cost drops from O(M×N) to O(M+N).
+**Why do people build MCP servers?** The motivation is straightforward: **if you want your service to be usable by AI agents, you write an MCP server.** Before MCP, every AI tool had to write a bespoke integration for every service it wanted to connect to — M agents × N services = M×N integrations. With MCP, each service implements the protocol once (N servers), each agent implements the protocol once (M clients), and everything just works: M+N instead of M×N. It's the same economics that made USB successful — standardization creates an ecosystem.
+
+Today there are MCP servers for GitHub, Slack, PostgreSQL, Google Drive, Jira, and hundreds of other services. Any MCP-compatible agent can use any of them without custom code.
 
 ## Deep Dive: MCP in Action
 
@@ -109,9 +112,9 @@ With MCP, a tool provider implements the protocol once, and any MCP-compatible a
 
 Let's trace through a concrete example. Suppose you ask an AI coding assistant: *"Find all Python files that import torch."*
 
-**Step 1: The agent receives your request** and passes it to the LLM along with a list of available tools (provided by MCP servers).
+**Step 1: The host receives your request** and passes it to the LLM, along with tool descriptions from all connected MCP servers. The filesystem server has advertised a tool called `search_files` with parameters `query` (string) and `pattern` (glob pattern).
 
-**Step 2: The LLM decides** it needs to call the `search_files` tool. It outputs a structured JSON tool call:
+**Step 2: The LLM decides** it needs to call `search_files`. It doesn't run anything — it just outputs a structured JSON tool call:
 
 ```json
 {
@@ -123,9 +126,9 @@ Let's trace through a concrete example. Suppose you ask an AI coding assistant: 
 }
 ```
 
-**Step 3: The harness sends this as an MCP request** to the filesystem MCP server. The request follows the standard MCP protocol — it doesn't matter whether the server is written in Python, TypeScript, or Rust. The protocol defines the wire format.
+**Step 3: The MCP client routes this request** to the filesystem MCP server over stdio (if the server runs locally as a subprocess) or HTTP (if it runs remotely). The protocol is the same either way.
 
-**Step 4: The MCP server processes the request.** It validates the parameters against its schema, executes the search, and returns a structured response:
+**Step 4: The MCP server does the actual work.** It's a real program running on your machine (or a remote server) with real filesystem access. It validates the parameters against its schema, runs the file search (e.g., using `ripgrep` or `glob` under the hood), and returns a structured response:
 
 ```json
 {
@@ -136,15 +139,17 @@ Let's trace through a concrete example. Suppose you ask an AI coding assistant: 
 }
 ```
 
-**Step 5: The agent feeds this result back to the LLM,** which can now reason about it — perhaps reading those files next, or answering your question directly.
+**Step 5: The host feeds this result back to the LLM,** which can now reason about it — read those files, answer your question, or call another tool.
 
-The key point: the agent doesn't know *how* `search_files` works internally. It only knows the tool's name, description, and parameter schema — all advertised through MCP's discovery mechanism. This is what makes the protocol composable: you can swap out the filesystem server for a GitHub server or a database server, and the agent doesn't need to change.
+Notice what happened: the LLM never touched the filesystem. It made a *decision* ("I should search for files"), expressed it as structured data, and a real program executed the action. This is how tool use works in practice — the model decides, the infrastructure acts.
 
 ## Skills: Reusable Task Patterns
 
-Even with tools available, you often find the model repeating the same multi-step patterns. "Read the file, understand the context, make the edit, run the tests" — this sequence appears in almost every code modification task.
+Now we have an LLM that can access knowledge (RAG) and take actions (tools via MCP). But there's a reliability problem.
 
-**Skills** are pre-defined task patterns that encode these workflows. Instead of hoping the model figures out the right sequence of tool calls every time, a skill provides a structured recipe:
+Even with tools available, you often find the model repeating the same multi-step patterns. "Read the file, understand the context, make the edit, run the tests" — this sequence appears in almost every code modification task. Sometimes the model gets it right. Sometimes it skips a step, forgets to run tests, or takes a destructive shortcut.
+
+**Skills** are pre-defined task patterns that encode proven workflows. Instead of hoping the model figures out the right sequence of tool calls every time, a skill provides a structured recipe:
 
 - What context to gather first
 - What tools to use and in what order
@@ -203,21 +208,36 @@ Now we have all the pieces: an LLM that can reason, RAG for knowledge, tools for
 
 This observe-think-act loop is what transforms a stateless text generator into something that can actually accomplish multi-step tasks. The agent maintains state across iterations, recovers from errors, and makes progress toward a goal.
 
+But the agent loop itself doesn't solve everything. Who manages the context window when the conversation gets too long? Who decides which tool calls need user approval? Who prevents the agent from running in an infinite loop? That's the job of the harness.
+
 ## Harness Engineering: The Invisible Layer
+
+<p align="center">
+  <img src="/images/blog/memory-solutions.png" alt="Memory Solutions" style="max-width:100%;">
+</p>
 
 Here's what most blog posts leave out: **the agent doesn't run in a vacuum.** There is a layer of engineering between the model and the user that makes everything work — the **harness**.
 
-The harness is the system that:
+Remember the three limitations we identified at the start? Knowledge, memory, and action. RAG solved knowledge. Tools and MCP solved action. But **memory** — the ability to maintain context across a long session, remember user preferences, and learn from past interactions — that's the harness's job.
 
-- **Manages the conversation loop** — feeding context back to the model, compressing history when the context window fills up
-- **Enforces permissions** — deciding which tool calls to auto-approve vs. prompt the user
-- **Handles errors gracefully** — retrying failed tool calls, catching malformed outputs, preventing infinite loops
-- **Provides hooks** — letting users inject custom behaviors at specific points (before commit, after file edit, etc.)
-- **Controls cost and latency** — deciding when to use a more capable model vs. a faster one
+The harness tackles memory at three levels:
+
+- **Context window management** — The LLM's context window (e.g., 128K or 200K tokens) is its "working memory." As a conversation grows, the harness must decide what to keep and what to drop. It uses sliding windows, summarization, and compression to fit the most relevant information into the available space. This is why long coding sessions sometimes feel like the model "forgot" what it was doing — it literally did, because the harness compressed away earlier context to make room.
+
+- **Conversation history** — Rather than keeping everything in the context window, the harness can persist conversation history externally and selectively reload relevant parts. Think of the context window as a small desk and the history as a filing cabinet — the harness decides which files to pull out for the current task.
+
+- **Persistent memory** — For true long-term recall — user preferences, project conventions, past decisions — the harness writes to and reads from external stores. This could be a structured memory file (like `MEMORY.md` that persists across sessions), a vector database, or a knowledge graph. When people say an AI "remembers" something, there's always a system like this behind it. **Memory is not a feature of the LLM; it's a feature of the harness.**
+
+But memory management is just one of the harness's responsibilities:
+
+- **Permission enforcement** — deciding which tool calls to auto-approve vs. prompt the user (reading a file is fine; deleting a branch needs confirmation)
+- **Error handling** — retrying failed tool calls, catching malformed outputs, preventing infinite loops
+- **Hooks** — letting users inject custom behaviors at specific points (run linting before commit, send a notification after deployment)
+- **Cost and latency control** — deciding when to use a more capable model vs. a faster one
 
 This is where the real engineering complexity lives. The model is the brain, but the harness is the nervous system. A brilliant model with a poor harness produces unreliable results. A well-engineered harness can make even a less capable model useful.
 
-Think of it this way: when you use an AI coding assistant, the quality of your experience depends less on whether the underlying model scores 92% vs. 95% on some benchmark, and more on whether the harness correctly manages file reads, prevents destructive actions, and maintains context across a long session.
+Think of it this way: when you use an AI coding assistant, the quality of your experience depends less on whether the underlying model scores 92% vs. 95% on some benchmark, and more on whether the harness correctly manages context, prevents destructive actions, and maintains state across a long session.
 
 ## The Full Stack
 
@@ -227,17 +247,17 @@ Think of it this way: when you use an AI coding assistant, the quality of your e
 
 Zooming out, here is the logical stack from bottom to top:
 
-| Layer | What It Does | Why It Exists |
+| Layer | What It Does | Which Gap It Fills |
 |-------|-------------|---------------|
-| **LLM** | Generates text, reasons about problems | Core intelligence |
-| **RAG** | Retrieves relevant context | The model can't know everything |
-| **Tools** | Executes actions in the real world | Text generation alone isn't enough |
-| **MCP** | Standardizes tool interfaces | Bespoke integrations don't scale |
-| **Skills** | Encodes reusable task patterns | Reliability over ad-hoc reasoning |
-| **Agent** | Orchestrates the loop | Multi-step tasks need state |
-| **Harness** | Manages the runtime | Production systems need guardrails |
+| **LLM** | Generates text, reasons about problems | Core intelligence — but stateless, no knowledge, no actions |
+| **RAG** | Retrieves relevant context at query time | Knowledge gap — the model can't know everything |
+| **Tools** | Executes actions in the real world | Action gap — text generation alone isn't enough |
+| **MCP** | Standardizes tool interfaces (host/client/server) | Scale gap — bespoke integrations don't scale |
+| **Skills** | Encodes reusable multi-step task patterns | Reliability gap — ad-hoc tool use is error-prone |
+| **Agent** | Orchestrates the observe-think-act loop | Complexity gap — multi-step tasks need state |
+| **Harness** | Manages memory, permissions, errors, hooks | Production gap — real systems need guardrails and memory |
 
-Each layer exists because the layer below it is not sufficient on its own. That's the key insight — this isn't a collection of trendy acronyms. It's a logical progression of engineering solutions, each addressing a real limitation of what came before.
+Each layer exists because the layer below it is not sufficient on its own. That's the key insight — this isn't a collection of trendy acronyms. It's a logical chain where each link addresses a real limitation of the previous one.
 
 ## What's Next
 

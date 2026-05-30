@@ -17,7 +17,6 @@ Work Experience
 
 Education
 ======
-* Ph.D in Computing, [University of Portsmouth](https://researchportal.port.ac.uk/en/studentTheses/approximate-nearest-neighbor-search-with-hashing-and-quantization), 2023
 * M.S. in Software Engineering, [National University of Singapore](https://nus-csm.symplicity.com/profiles/weixiang.hong), 2019
 * B.S. in Software Engineering, [Fudan University](http://fdjpkc.fudan.edu.cn/d201348/13198/list.htm), 2015
 

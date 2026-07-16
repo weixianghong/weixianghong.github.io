@@ -10,7 +10,7 @@ locale                   : "en-US"
 title                    : "Weixiang Hong"
 title_separator          : "-"
 name                     : &name "Weixiang Hong"
-description              : &description "personal description"
+description              : &description "Empty Stack Engineer"
 url                      : https://weixianghong.github.io # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  : "" # the subpath of your site, e.g. "/blog"
 repository               : "weixianghong/weixianghong.github.io"
@@ -86,7 +86,7 @@ author:
   location         : "Menlo Park, California"
   employer         :
   pubmed           : 
-  googlescholar    : "https://scholar.google.com/citations?hl=en&user=2UBRE_wAAAAJ%20target=&user=2UBRE_wAAAAJ"
+  googlescholar    : "https://scholar.google.com/citations?user=2UBRE_wAAAAJ&hl=en"
   email            : "weixiang.hong@outlook.com"
   researchgate     :  # example: "https://www.researchgate.net/profile/yourprofile"
   uri              :
@@ -200,8 +200,8 @@ defaults:
       author_profile: true
       read_time: true
       comments: False
-      share: true
-      related: true
+      share: false
+      related: false
   # _pages
   - scope:
       path: ""

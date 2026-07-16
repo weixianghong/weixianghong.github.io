@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="650" viewBox="0 0 1000 650">
+<defs>
+  <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#6B6B6B"/>
+  </marker>
+  <style>
+    .title { font: 700 30px Arial, Helvetica, sans-serif; fill: #333333; }
+    .h1 { font: 700 23px Arial, Helvetica, sans-serif; }
+    .h2 { font: 700 18px Arial, Helvetica, sans-serif; }
+    .body { font: 400 15px Arial, Helvetica, sans-serif; fill: #666666; }
+    .small { font: 400 13px Arial, Helvetica, sans-serif; fill: #666666; }
+    .formula { font: 700 19px Arial, Helvetica, sans-serif; fill: #333333; }
+    .caption { font: 700 16px Arial, Helvetica, sans-serif; fill: #333333; }
+  </style>
+</defs>
+<rect width="100%" height="100%" fill="white"/>
+<text x="500" y="48" text-anchor="middle" class="title">Signals: One Data Layer, Three Jobs</text>
+<rect x="350" y="85" width="300" height="130" rx="16" fill="#F1F3F5" stroke="#546E7A" stroke-width="3"/>
+<text x="500.0" y="127" text-anchor="middle" class="h1" fill="#546E7A">Signals</text>
+<text x="500.0" y="163" text-anchor="middle" class="body">User behavior</text>
+<text x="500.0" y="185" text-anchor="middle" class="body">Ad and context features</text>
+<text x="500.0" y="207" text-anchor="middle" class="body">Advertiser events</text>
+<rect x="55" y="310" width="260" height="150" rx="16" fill="#E6F2FF" stroke="#1565C0" stroke-width="3"/>
+<text x="185.0" y="352" text-anchor="middle" class="h1" fill="#1565C0">Targeting</text>
+<text x="185.0" y="388" text-anchor="middle" class="body">Define eligible audiences</text>
+<text x="185.0" y="410" text-anchor="middle" class="body">Choose the optimized action</text>
+<text x="185.0" y="432" text-anchor="middle" class="body">Find similar prospects</text>
+<rect x="370" y="310" width="260" height="150" rx="16" fill="#FFF3E0" stroke="#E65100" stroke-width="3"/>
+<text x="500.0" y="352" text-anchor="middle" class="h1" fill="#E65100">Delivery</text>
+<text x="500.0" y="388" text-anchor="middle" class="body">Retrieve candidates</text>
+<text x="500.0" y="410" text-anchor="middle" class="body">Predict action rates</text>
+<text x="500.0" y="432" text-anchor="middle" class="body">Rank the auction</text>
+<rect x="685" y="310" width="260" height="150" rx="16" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/>
+<text x="815.0" y="352" text-anchor="middle" class="h1" fill="#2E7D32">Measurement</text>
+<text x="815.0" y="388" text-anchor="middle" class="body">Match outcomes</text>
+<text x="815.0" y="410" text-anchor="middle" class="body">Attribute conversions</text>
+<text x="815.0" y="432" text-anchor="middle" class="body">Report performance</text>
+<path d="M440,215 C380,265 260,270 185,310" fill="none" stroke="#6B6B6B" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="500" y1="215" x2="500" y2="310" stroke="#6B6B6B" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M560,215 C620,265 740,270 815,310" fill="none" stroke="#6B6B6B" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M815,460 C815,560 655,575 500,575 C345,575 185,560 185,460" fill="none" stroke="#6B6B6B" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="500" y="615" text-anchor="middle" class="caption">Measured outcomes become new training labels and features</text>
+</svg>

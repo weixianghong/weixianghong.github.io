@@ -2,6 +2,7 @@
 title: 'From LLM to Agent: Why Token-In-Token-Out Is Not Enough'
 date: 2026-03-25
 read_time: true
+excerpt: "Walking from a raw LLM to a full agent system — RAG, tool use, MCP, skills, and the harness — as a series of engineering problems and the solutions that emerged to solve them."
 tags:
   - llm
   - agent

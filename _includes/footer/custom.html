@@ -1,25 +1,2 @@
-<script>
-  (function() {
-    var toggle = document.getElementById('dark-mode-toggle');
-    var icon = document.getElementById('theme-icon');
-
-    function updateIcon() {
-      var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-      icon.innerHTML = isDark ? '&#9788;' : '&#9790;';
-    }
-
-    updateIcon();
-
-    toggle.addEventListener('click', function() {
-      var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-      if (isDark) {
-        document.documentElement.removeAttribute('data-theme');
-        localStorage.setItem('theme', 'light');
-      } else {
-        document.documentElement.setAttribute('data-theme', 'dark');
-        localStorage.setItem('theme', 'dark');
-      }
-      updateIcon();
-    });
-  })();
-</script>
+<!-- Theme handling (initial mode, toggle, system auto-follow) lives in
+     _includes/head/custom.html so it applies before first paint. -->

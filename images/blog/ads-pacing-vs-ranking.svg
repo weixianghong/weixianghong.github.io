@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="720" viewBox="0 0 1000 720">
+<defs>
+  <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#6B6B6B"/>
+  </marker>
+  <style>
+    .title { font: 700 30px Arial, Helvetica, sans-serif; fill: #333333; }
+    .h1 { font: 700 23px Arial, Helvetica, sans-serif; }
+    .h2 { font: 700 18px Arial, Helvetica, sans-serif; }
+    .body { font: 400 15px Arial, Helvetica, sans-serif; fill: #666666; }
+    .small { font: 400 13px Arial, Helvetica, sans-serif; fill: #666666; }
+    .formula { font: 700 19px Arial, Helvetica, sans-serif; fill: #333333; }
+    .caption { font: 700 16px Arial, Helvetica, sans-serif; fill: #333333; }
+  </style>
+</defs>
+<rect width="100%" height="100%" fill="white"/>
+<text x="500" y="48" text-anchor="middle" class="title">Pacing and Ranking Solve Different Problems</text>
+<rect x="35" y="90" width="440" height="560" rx="18" fill="#FAFAFA" stroke="#D0D0D0" stroke-width="2"/>
+<text x="255" y="135" text-anchor="middle" class="h1" fill="#1565C0">Pacing: Across Time</text>
+<text x="255" y="165" text-anchor="middle" class="body">One campaign allocates a limited budget across many auctions</text>
+<circle cx="115" cy="230" r="24" fill="#F1F3F5" stroke="#1565C0" stroke-width="3"/>
+<text x="115" y="236" text-anchor="middle" class="h2" fill="#1565C0">1</text>
+<text x="165" y="224" class="h2" fill="#1565C0">Morning</text>
+<text x="165" y="252" class="body">Lower bid multiplier</text>
+<circle cx="115" cy="345" r="24" fill="#F1F3F5" stroke="#2E7D32" stroke-width="3"/>
+<text x="115" y="351" text-anchor="middle" class="h2" fill="#2E7D32">2</text>
+<text x="165" y="339" class="h2" fill="#2E7D32">Afternoon</text>
+<text x="165" y="367" class="body">Normal participation</text>
+<circle cx="115" cy="460" r="24" fill="#F1F3F5" stroke="#E65100" stroke-width="3"/>
+<text x="115" y="466" text-anchor="middle" class="h2" fill="#E65100">3</text>
+<text x="165" y="454" class="h2" fill="#E65100">Evening</text>
+<text x="165" y="482" class="body">More aggressive</text>
+<line x1="115" y1="254" x2="115" y2="436" stroke="#8A8A8A" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="95" y="540" width="320" height="70" rx="14" fill="#E6F2FF" stroke="#1565C0" stroke-width="3"/>
+<text x="255" y="570" text-anchor="middle" class="h2" fill="#1565C0">Goal</text>
+<text x="255" y="596" text-anchor="middle" class="body">Maximize value under a limited budget</text>
+<rect x="525" y="90" width="440" height="560" rx="18" fill="#FAFAFA" stroke="#D0D0D0" stroke-width="2"/>
+<text x="745" y="135" text-anchor="middle" class="h1" fill="#7B1FA2">Ranking: Within One Auction</text>
+<text x="745" y="165" text-anchor="middle" class="body">Many campaigns compete for the same impression</text>
+<rect x="590" y="245" width="210" height="75" rx="14" fill="#E6F2FF" stroke="#1565C0" stroke-width="3"/>
+<text x="695" y="275" text-anchor="middle" class="h2" fill="#1565C0">Campaign A</text>
+<text x="695" y="301" text-anchor="middle" class="body">Score 1.7</text>
+<rect x="590" y="350" width="210" height="75" rx="14" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/>
+<text x="695" y="380" text-anchor="middle" class="h2" fill="#2E7D32">Campaign B</text>
+<text x="695" y="406" text-anchor="middle" class="body">Score 1.9</text>
+<rect x="590" y="455" width="210" height="75" rx="14" fill="#FFF3E0" stroke="#E65100" stroke-width="3"/>
+<text x="695" y="485" text-anchor="middle" class="h2" fill="#E65100">Campaign C</text>
+<text x="695" y="511" text-anchor="middle" class="body">Score 1.6</text>
+<rect x="830" y="335" width="105" height="120" rx="16" fill="#FDEBEC" stroke="#C62828" stroke-width="3"/>
+<text x="882.5" y="377" text-anchor="middle" class="h1" fill="#C62828">Winner</text>
+<text x="882.5" y="413" text-anchor="middle" class="body">B</text>
+<line x1="800" y1="282" x2="830" y2="370" stroke="#6B6B6B" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="800" y1="387" x2="830" y2="395" stroke="#6B6B6B" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="800" y1="492" x2="830" y2="420" stroke="#6B6B6B" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="575" y="540" width="340" height="70" rx="14" fill="#F3E5F5" stroke="#7B1FA2" stroke-width="3"/>
+<text x="745" y="570" text-anchor="middle" class="h2" fill="#7B1FA2">Goal</text>
+<text x="745" y="596" text-anchor="middle" class="body">Choose the highest-value eligible ad now</text>
+</svg>

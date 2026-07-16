@@ -2,6 +2,9 @@
 
 <div class="masthead">
   <div class="masthead__inner-wrap">
+    <button class="dark-mode-toggle" id="dark-mode-toggle" type="button" aria-label="Toggle dark mode" title="Toggle dark/light mode">
+      <span id="theme-icon">&#9790;</span>
+    </button>
     <div class="masthead__menu">
       <nav id="site-nav" class="greedy-nav">
         <button><div class="navicon"></div></button>
@@ -15,11 +18,6 @@
             {% endif %}
             <li class="masthead__menu-item"><a href="{{ domain }}{{ link.url }}">{{ link.title }}</a></li>
           {% endfor %}
-          <li class="masthead__menu-item">
-            <button class="dark-mode-toggle" id="dark-mode-toggle" aria-label="Toggle dark mode" title="Toggle dark/light mode">
-              <span id="theme-icon">&#9790;</span>
-            </button>
-          </li>
         </ul>
         <ul class="hidden-links hidden"></ul>
       </nav>

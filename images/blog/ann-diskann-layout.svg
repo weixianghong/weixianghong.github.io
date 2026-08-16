@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="724" viewBox="0 0 1000 724">
+<rect width="100%" height="100%" fill="white"/>
+<text x="500.0" y="48" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="29" font-weight="700" fill="#333333">DiskANN 的内存 / 磁盘分工（10 亿 × 128 维 float）</text>
+<rect x="60" y="84" width="880" height="132" rx="16" fill="#E6F2FF" stroke="#1565C0" stroke-width="3"/>
+<text x="96" y="122" text-anchor="start" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="19" font-weight="700" fill="#1565C0">内存 (64 GB 机器)</text>
+<text x="96" y="152" text-anchor="start" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#666666">只放近似信息，用于导航</text>
+<rect x="356" y="106" width="184" height="88" rx="12" fill="#FFFFFF" stroke="#9CC3EA" stroke-width="2"/>
+<text x="448" y="140" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="13.5" font-weight="400" fill="#666666">PQ 压缩码  32 B × 10 亿</text>
+<text x="448" y="172" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="20" font-weight="700" fill="#1565C0">32 GB</text>
+<rect x="556" y="106" width="184" height="88" rx="12" fill="#FFFFFF" stroke="#9CC3EA" stroke-width="2"/>
+<text x="648" y="140" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="13.5" font-weight="400" fill="#666666">PQ 码本</text>
+<text x="648" y="172" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="20" font-weight="700" fill="#1565C0">几 MB</text>
+<rect x="756" y="106" width="184" height="88" rx="12" fill="#FFFFFF" stroke="#9CC3EA" stroke-width="2"/>
+<text x="848" y="140" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="13.5" font-weight="400" fill="#666666">入口点附近的缓存</text>
+<text x="848" y="172" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="20" font-weight="700" fill="#1565C0">几百 MB</text>
+<line x1="500" y1="222" x2="500.0" y2="258.4" stroke="#6B6B6B" stroke-width="3.5"/>
+<polygon points="500.0,268.0 494.2,257.5 505.8,257.5" fill="#6B6B6B"/>
+<text x="516" y="252" text-anchor="start" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#6B6B6B">导航靠内存里的近似距离，零 IO</text>
+<rect x="60" y="278" width="880" height="344" rx="16" fill="#FFF3E0" stroke="#E65100" stroke-width="3"/>
+<text x="96" y="316" text-anchor="start" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="19" font-weight="700" fill="#E65100">SSD</text>
+<text x="150" y="316" text-anchor="start" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="15" font-weight="400" fill="#666666">原始向量 512 GB  +  Vamana 图 256 GB</text>
+<text x="96" y="344" text-anchor="start" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="13.5" font-weight="400" fill="#8A9199">每个节点存成一条定长记录，偏移量 = i × node_size，直接算出来</text>
+<rect x="96" y="400" width="428.24" height="92" rx="8" fill="#FFF3E0" stroke="#E65100" stroke-width="2.5"/>
+<text x="310.12" y="440" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#E65100">原始向量</text>
+<text x="310.12" y="466" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#666666">512 B</text>
+<rect x="524.24" y="400" width="64.64" height="92" rx="8" fill="#F1F3F5" stroke="#546E7A" stroke-width="2.5"/>
+<text x="556.5600000000001" y="440" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#546E7A">邻居数</text>
+<text x="556.5600000000001" y="466" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#666666">4 B</text>
+<rect x="588.88" y="400" width="234.32" height="92" rx="8" fill="#E8F5E9" stroke="#2E7D32" stroke-width="2.5"/>
+<text x="706.04" y="440" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#2E7D32">邻居 ID × 64</text>
+<text x="706.04" y="466" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#666666">256 B</text>
+<rect x="823.2" y="400" width="80.80000000000001" height="92" rx="8" fill="#F4F6F7" stroke="#C3CBD1" stroke-width="2.5"/>
+<text x="863.6" y="440" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#C3CBD1">padding</text>
+<line x1="96" y1="388" x2="904" y2="388" stroke="#6B6B6B" stroke-width="2"/>
+<line x1="96" y1="382" x2="96" y2="394" stroke="#6B6B6B" stroke-width="2"/>
+<line x1="904" y1="382" x2="904" y2="394" stroke="#6B6B6B" stroke-width="2"/>
+<text x="500.0" y="376" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="14.5" font-weight="700" fill="#333333">对齐到一个 4 KB 扇区 —— 一次读盘全部拿到</text>
+<line x1="310.12" y1="502" x2="310.12" y2="530.0" stroke="#E65100" stroke-width="3"/>
+<polygon points="310.1,538.0 305.3,529.2 314.9,529.2" fill="#E65100"/>
+<line x1="706.04" y1="502" x2="706.04" y2="530.0" stroke="#2E7D32" stroke-width="3"/>
+<polygon points="706.0,538.0 701.2,529.2 710.9,529.2" fill="#2E7D32"/>
+<text x="310.12" y="564" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#E65100">我在哪</text>
+<text x="310.12" y="586" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="13.5" font-weight="400" fill="#666666">精确距离，用于最终重排</text>
+<text x="706.04" y="564" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#2E7D32">往哪走</text>
+<text x="706.04" y="586" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="13.5" font-weight="400" fill="#666666">邻居列表，用于继续搜索</text>
+<rect x="60" y="644" width="880" height="56" rx="14" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/>
+<text x="500" y="678" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#2E7D32">精确向量是搭便车来的：为了拿邻居列表，这个扇区本来就必须读 —— 重排不产生任何额外 IO</text>
+</svg>

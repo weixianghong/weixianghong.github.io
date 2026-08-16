@@ -18,8 +18,7 @@ author_profile: true
 <p class="post-card__meta">
 {{ post.date | date: "%B %d, %Y" }}
 &middot;
-{% assign words = post.content | strip_html | number_of_words %}
-{% if words < 180 %}less than 1 minute read{% elsif words < 360 %}1 minute read{% else %}{{ words | divided_by: site.words_per_minute }} minute read{% endif %}
+{% if post.read_time_minutes %}{{ post.read_time_minutes }} minute read{% else %}{% assign words = post.content | strip_html | number_of_words %}{% if words < 180 %}less than 1 minute read{% elsif words < 360 %}1 minute read{% else %}{{ words | divided_by: site.words_per_minute }} minute read{% endif %}{% endif %}
 </p>
 {% if post.tags.size > 0 %}
 <p class="post-card__tags">{% for tag in post.tags %}<span class="post-tag">{{ tag }}</span>{% endfor %}</p>

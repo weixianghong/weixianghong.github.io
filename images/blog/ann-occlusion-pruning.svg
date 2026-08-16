@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="786" viewBox="0 0 1000 786">
+<rect width="100%" height="100%" fill="white"/>
+<text x="500.0" y="48" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="29" font-weight="700" fill="#333333">遮挡剪枝：HNSW / NSG / Vamana 共用的同一个判据</text>
+<rect x="45" y="80" width="445" height="300" rx="16" fill="#FBFCFD" stroke="#DDE2E6" stroke-width="2"/>
+<line x1="128" y1="316" x2="238" y2="166" stroke="#1565C0" stroke-width="3.5"/>
+<line x1="238" y1="166" x2="438" y2="322" stroke="#AEB8C0" stroke-width="2.4" stroke-dasharray="7,6"/>
+<line x1="128" y1="316" x2="438" y2="322" stroke="#C62828" stroke-width="3.5" stroke-dasharray="8,6"/>
+<text x="152" y="232" text-anchor="end" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#1565C0">65</text>
+<text x="352" y="216" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#8A9199">88</text>
+<text x="276" y="348" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#C62828">100</text>
+<circle cx="128" cy="316" r="11" fill="#F1F3F5" stroke="#546E7A" stroke-width="3.5"/>
+<text x="128" y="352" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="18" font-weight="700" fill="#546E7A">p</text>
+<circle cx="238" cy="166" r="11" fill="#E6F2FF" stroke="#1565C0" stroke-width="3.5"/>
+<text x="262" y="173" text-anchor="start" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="18" font-weight="700" fill="#1565C0">p*</text>
+<circle cx="438" cy="322" r="11" fill="#FFEBEE" stroke="#C62828" stroke-width="3.5"/>
+<text x="438" y="358" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="18" font-weight="700" fill="#C62828">q</text>
+<text x="238" y="134" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="13.5" font-weight="400" fill="#1565C0">已选邻居</text>
+<text x="438" y="288" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="13.5" font-weight="400" fill="#C62828">候选点</text>
+<text x="267" y="372" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="13.5" font-weight="400" fill="#8A9199">绕道 p* 只把剩余距离从 100 缩到 88，收益仅 12%</text>
+<rect x="516" y="80" width="439" height="300" rx="16" fill="#F1F3F5" stroke="#546E7A" stroke-width="3"/>
+<text x="735" y="118" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="18" font-weight="700" fill="#546E7A">判据</text>
+<text x="735" y="162" text-anchor="middle" font-family="SF Mono, Menlo, Consolas, monospace" font-size="18.5" font-weight="700" fill="#333333">α · d(p*, q)  ≤  d(p, q)   →  删除 p→q</text>
+<text x="735" y="200" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="15" font-weight="400" fill="#666666">绕道 p* 至少要让剩余距离缩小 α 倍，</text>
+<text x="735" y="224" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="15" font-weight="400" fill="#666666">否则这条直连边必须保留下来</text>
+<line x1="546" y1="250" x2="924" y2="250" stroke="#C9D1D7" stroke-width="1.5"/>
+<rect x="542" y="268" width="190" height="42" rx="10" fill="#E6F2FF" stroke="#1565C0" stroke-width="2.5"/>
+<text x="637" y="295" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="17" font-weight="700" fill="#1565C0">α = 1.0</text>
+<rect x="742" y="268" width="190" height="42" rx="10" fill="#FFF3E0" stroke="#E65100" stroke-width="2.5"/>
+<text x="837" y="295" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="17" font-weight="700" fill="#E65100">α = 1.2</text>
+<text x="637" y="332" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="14.5" font-weight="700" fill="#666666">RNG 规则</text>
+<text x="637" y="354" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#8A9199">HNSW、NSG</text>
+<text x="837" y="332" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="14.5" font-weight="700" fill="#666666">α 放松</text>
+<text x="837" y="354" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#8A9199">Vamana、DiskANN</text>
+<rect x="45" y="404" width="910" height="316" rx="16" fill="#FBFCFD" stroke="#DDE2E6" stroke-width="2"/>
+<text x="500" y="440" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="17" font-weight="700" fill="#333333">一维算例：p = 0 出发，候选点在 1 / 2 / 4 / 8 处，看谁能留下来当 p 的邻居</text>
+<rect x="76" y="476" width="112" height="40" rx="10" fill="#E6F2FF" stroke="#1565C0" stroke-width="2.5"/>
+<text x="132" y="503" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="17" font-weight="700" fill="#1565C0">α = 1.0</text>
+<line x1="230" y1="496" x2="920" y2="496" stroke="#C9D1D7" stroke-width="2"/>
+<text x="230" y="476" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#1565C0">p</text>
+<circle cx="230" cy="496" r="11" fill="#E6F2FF" stroke="#1565C0" stroke-width="3"/>
+<text x="230" y="526" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#8A9199">0</text>
+<text x="312" y="476" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#1565C0">a</text>
+<circle cx="312" cy="496" r="9" fill="#E6F2FF" stroke="#1565C0" stroke-width="3"/>
+<text x="312" y="526" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#8A9199">1</text>
+<text x="394" y="476" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#8A9199">b</text>
+<circle cx="394" cy="496" r="9" fill="#FFFFFF" stroke="#AEB8C0" stroke-width="3"/>
+<text x="394" y="526" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#8A9199">2</text>
+<text x="558" y="476" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#8A9199">c</text>
+<circle cx="558" cy="496" r="9" fill="#FFFFFF" stroke="#AEB8C0" stroke-width="3"/>
+<text x="558" y="526" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#8A9199">4</text>
+<text x="886" y="476" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#8A9199">d</text>
+<circle cx="886" cy="496" r="9" fill="#FFFFFF" stroke="#AEB8C0" stroke-width="3"/>
+<text x="886" y="526" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#8A9199">8</text>
+<path d="M230,504 Q271,533 312,504" fill="none" stroke="#1565C0" stroke-width="3"/>
+<text x="500" y="554" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#1565C0">1 × 7 = 7 ≤ 8 → d 也被剪掉。图退化成一条链，p 走到 d 要 4 跳</text>
+<rect x="76" y="596" width="112" height="40" rx="10" fill="#FFF3E0" stroke="#E65100" stroke-width="2.5"/>
+<text x="132" y="623" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="17" font-weight="700" fill="#E65100">α = 1.2</text>
+<line x1="230" y1="616" x2="920" y2="616" stroke="#C9D1D7" stroke-width="2"/>
+<text x="230" y="596" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#E65100">p</text>
+<circle cx="230" cy="616" r="11" fill="#FFF3E0" stroke="#E65100" stroke-width="3"/>
+<text x="230" y="646" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#8A9199">0</text>
+<text x="312" y="596" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#E65100">a</text>
+<circle cx="312" cy="616" r="9" fill="#FFF3E0" stroke="#E65100" stroke-width="3"/>
+<text x="312" y="646" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#8A9199">1</text>
+<text x="394" y="596" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#8A9199">b</text>
+<circle cx="394" cy="616" r="9" fill="#FFFFFF" stroke="#AEB8C0" stroke-width="3"/>
+<text x="394" y="646" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#8A9199">2</text>
+<text x="558" y="596" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#8A9199">c</text>
+<circle cx="558" cy="616" r="9" fill="#FFFFFF" stroke="#AEB8C0" stroke-width="3"/>
+<text x="558" y="646" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#8A9199">4</text>
+<text x="886" y="596" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#E65100">d</text>
+<circle cx="886" cy="616" r="9" fill="#FFF3E0" stroke="#E65100" stroke-width="3"/>
+<text x="886" y="646" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#8A9199">8</text>
+<path d="M230,624 Q271,653 312,624" fill="none" stroke="#E65100" stroke-width="3"/>
+<path d="M230,624 Q558,672 886,624" fill="none" stroke="#E65100" stroke-width="3"/>
+<text x="500" y="694" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#E65100">1.2 × 7 = 8.4 &gt; 8 → d 被保留成长边，p 走到 d 只要 1 跳</text>
+<text x="500" y="752" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#333333">α 是「绕路的最低收益门槛」：门槛抬高，越靠外的点越容易被保留成长边</text>
+</svg>

@@ -118,6 +118,22 @@
     background: var(--code-bg);
     border: 1px solid var(--code-border);
   }
+
+  /* Fenced code blocks. The theme hardcodes a near-white background with
+     Solarized Light tokens, so in dark mode untagged blocks render as
+     light text on a light box. Drive both from the theme variables. */
+  div.highlighter-rouge, figure.highlight, pre.highlight {
+    background-color: var(--code-bg);
+    border-color: var(--code-border);
+    box-shadow: none;
+  }
+  div.highlighter-rouge:before, figure.highlight:before { content: none; }
+  div.highlighter-rouge .highlight,
+  figure.highlight .highlight,
+  .highlight pre, .highlight code, pre > code {
+    background: transparent;
+    color: var(--text);
+  }
   .page__related { border-top-color: var(--border); }
   .page__share { border-top-color: var(--border); }
   .page__taxonomy-item { border-color: var(--border); }

@@ -1,5 +1,5 @@
 ---
-title: "长边从哪里来"
+title: "[In Progress] 向量检索为什么最后都变成了图"
 date: 2026-08-16
 permalink: /ann-graph-index/
 author_profile: true

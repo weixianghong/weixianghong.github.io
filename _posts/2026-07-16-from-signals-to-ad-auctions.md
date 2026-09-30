@@ -1,7 +1,9 @@
 ---
 title: "How Ads Really Get Chosen: Signals, Auctions, Pacing, and Measurement"
 date: 2026-07-16
-permalink: /signals-to-ad-auctions/
+permalink: /blogs/signals-to-ad-auctions/
+redirect_from:
+  - /signals-to-ad-auctions/
 author_profile: true
 read_time: true
 excerpt: "A practical mental model for how signals become targeting decisions, auction scores, budget allocation, and conversion measurement."

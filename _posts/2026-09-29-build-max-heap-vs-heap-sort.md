@@ -2,6 +2,8 @@
 title: "为什么 Build-Max-Heap 是 O(n)，而 Heap Sort 却是 O(n log n)？"
 date: 2026-09-29
 permalink: /blogs/build-max-heap-vs-heap-sort/
+redirect_from:
+  - /build-max-heap-vs-heap-sort/
 author_profile: true
 read_time: true
 excerpt: "两个过程都在反复调用 O(log n) 的 Max-Heapify，为什么建堆是 O(n)，堆排序却仍然是 O(n log n)？关键不在单次最坏复杂度，而在昂贵操作如何分布。"

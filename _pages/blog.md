@@ -1,6 +1,8 @@
 ---
 layout: archive
-permalink: /blog/
+permalink: /blogs/
+redirect_from:
+  - /blog/
 author_profile: true
 ---
 

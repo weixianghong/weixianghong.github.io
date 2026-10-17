@@ -153,7 +153,7 @@ claude --model claude-opus-5-5
 Windows PowerShell：
 
 ```powershell
-cd C:\\path\\to\\my-project
+cd C:\path\to\my-project
 claude --model claude-opus-5-5
 ```
 

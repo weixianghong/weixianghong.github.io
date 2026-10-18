@@ -105,7 +105,6 @@ claude --version
 
 OAuth 路由共享上游订阅的使用额度，**不是无限调用**；高峰期可能出现限流或额度不足。LiteLLM Virtual Key 自身也可能有预算或模型权限限制，这些限制与上游订阅额度是两套机制。
 
-## 5. 设置个人 Virtual Key 并启动
 
 这里使用的是**你自己的 Virtual Key**，不是管理员的 Anthropic API Key。为避免留下明文命令历史，下方会通过交互式提示输入密钥。
 

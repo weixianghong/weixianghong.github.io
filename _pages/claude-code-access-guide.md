@@ -8,7 +8,7 @@ comments: false
 share: false
 related: false
 sitemap: false
-excerpt: "通过 Tailscale 和专属访问密钥，在自己的电脑上连接 Claude Code。"
+excerpt: "通过 Tailscale 和个人访问密钥，连接 Claude OAuth 模型网关。"
 ---
 
 > 这是一份提供给受邀用户的操作指南。**管理员会单独发给你两样东西：Tailscale 设备邀请链接、LiteLLM Virtual Key。** 请勿将邀请链接或密钥公开转发。
@@ -93,6 +93,20 @@ claude --version
 
 ## 5. 设置个人 Virtual Key 并启动
 
+本指南现在默认使用 **Claude OAuth 路由**，不使用按量付费的 Anthropic Console API 模型。请选择以下已由管理员授权的模型别名：
+
+| 模型别名 | 用途 |
+| --- | --- |
+| `claude-pro-opus-5-5` | 默认；Opus |
+| `claude-pro-sonnet-4-6` | Sonnet |
+| `claude-pro-haiku-4-5-20251001` | Haiku |
+
+**不要使用旧的 `claude-opus-5-5` 名称。** 它曾经对应 Console API，管理员正在停用旧路由；即使某次请求成功，也不代表使用了 OAuth。以下命令全部使用新别名。
+
+OAuth 路由共享上游订阅的使用额度，**不是无限调用**；高峰期可能出现限流或额度不足。LiteLLM Virtual Key 自身也可能有预算或模型权限限制，这些限制与上游订阅额度是两套机制。
+
+## 5. 设置个人 Virtual Key 并启动
+
 这里使用的是**你自己的 Virtual Key**，不是管理员的 Anthropic API Key。为避免留下明文命令历史，下方会通过交互式提示输入密钥。
 
 ### macOS（默认 zsh）
@@ -102,11 +116,11 @@ claude --version
 ```bash
 unset ANTHROPIC_API_KEY HTTPS_PROXY HTTP_PROXY ALL_PROXY
 export ANTHROPIC_BASE_URL="http://lenovo-z475.tail8387b0.ts.net:4000"
-export ANTHROPIC_MODEL="claude-opus-5-5"
+export ANTHROPIC_MODEL="claude-pro-opus-5-5"
 read -rs "ANTHROPIC_AUTH_TOKEN?请粘贴你的 Virtual Key（输入不会显示）: "
 echo
 export ANTHROPIC_AUTH_TOKEN
-claude --model claude-opus-5-5
+claude --model claude-pro-opus-5-5
 ```
 
 粘贴 Virtual Key 后按回车。输入不会在屏幕上回显；启动后即可在 Claude Code 中提问。
@@ -120,7 +134,7 @@ Remove-Item Env:ANTHROPIC_API_KEY -ErrorAction SilentlyContinue
 Remove-Item Env:HTTPS_PROXY -ErrorAction SilentlyContinue
 Remove-Item Env:HTTP_PROXY -ErrorAction SilentlyContinue
 $env:ANTHROPIC_BASE_URL = "http://lenovo-z475.tail8387b0.ts.net:4000"
-$env:ANTHROPIC_MODEL = "claude-opus-5-5"
+$env:ANTHROPIC_MODEL = "claude-pro-opus-5-5"
 $secret = Read-Host "请输入你的 Virtual Key" -AsSecureString
 $bstr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secret)
 try {
@@ -128,7 +142,7 @@ try {
 } finally {
     [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($bstr)
 }
-claude --model claude-opus-5-5
+claude --model claude-pro-opus-5-5
 ```
 
 以上环境变量**只在当前终端会话生效**。以后打开新窗口，需要重新设置。不要把 Virtual Key 写进公开仓库、共享截图或发送给其他人。
@@ -147,19 +161,19 @@ Hello! Reply with one short sentence.
 
 ```bash
 cd ~/my-project
-claude --model claude-opus-5-5
+claude --model claude-pro-opus-5-5
 ```
 
 Windows PowerShell：
 
 ```powershell
 cd C:\path\to\my-project
-claude --model claude-opus-5-5
+claude --model claude-pro-opus-5-5
 ```
 
 日常使用记住两点：**先确保 Tailscale 已连接**；使用的终端里要有上述三个环境变量（`ANTHROPIC_BASE_URL`、`ANTHROPIC_AUTH_TOKEN`、`ANTHROPIC_MODEL`）。
 
-你的 Virtual Key 可能有管理员设置的**累计美元预算**；即使密钥没有到期时间，预算用完也需要找管理员调整。
+你的 Virtual Key 可能有管理员设置的**累计美元预算**；即使密钥没有到期时间，预算用完也需要找管理员调整。这是网关内部的用量管理，不等于 Anthropic Console API 实际扣费。
 
 ## 7. 常见问题
 
@@ -170,7 +184,7 @@ claude --model claude-opus-5-5
 | 健康检查 200，但 Claude Code 无法对话 | 检查当前终端的 `ANTHROPIC_BASE_URL`、模型名称和个人 Virtual Key |
 | `401 Unauthorized` | 检查 Virtual Key 是否粘贴完整，是否误用了其他人的 Key |
 | `403` 或预算相关错误 | 可能没有访问权限、额度用完或 Key 被停用；联系管理员 |
-| `429` | 通常与限流或额度有关，稍后重试或联系管理员 |
+| `429` | 通常与共享订阅额度、限流或网关限制有关，稍后重试或联系管理员 |
 | 新开终端后配置失效 | 本教程使用**会话级环境变量**，在新终端重新执行第 5 节 |
 | 先前登录过个人 Claude 账号 | 先检查是否残留个人 API Key 或代理环境变量；本教程已提供清理命令 |
 

@@ -11,7 +11,7 @@ sitemap: false
 excerpt: "Z475 Backup 使用 Google Drive API 为个人 Linux 服务器保存和恢复备份文件。"
 ---
 
-*最后更新 / Last updated: 2026-10-17*
+*最后更新 / Last updated: 2026-10-18*
 
 ## 中文
 
@@ -35,10 +35,6 @@ excerpt: "Z475 Backup 使用 Google Drive API 为个人 Linux 服务器保存和
 ### 4. 保留、删除与撤销授权
 
 备份数据会保留到本人手动删除，或自动备份清理策略将其删除为止。本人可以随时在 Google Drive 中删除相关备份文件夹，也可以在 [Google 账号的第三方应用连接设置](https://myaccount.google.com/connections) 中撤销 Z475 Backup 的访问权限。撤销授权会阻止后续 API 访问，但不会自动删除此前已经保存在 Drive 中的文件；如需删除，应另外手动移除。
-
-### 5. 安全与联系方式
-
-本应用面向个人使用，不保证零风险。应当保护 Google 账号和设备登录信息，避免公开分享备份文件夹。有关此应用和隐私政策的问题，可发送邮件至 [weixiang.hong@outlook.com](mailto:weixiang.hong@outlook.com)。
 
 ---
 
@@ -65,6 +61,3 @@ Backups may include server configuration, API credentials, and database exports.
 
 Files are retained until the owner deletes them or a configured backup-retention policy removes them. The owner can delete backup files directly in Google Drive and can revoke the app's access through [Google Account connections](https://myaccount.google.com/connections). Revocation stops future authorized access but does not itself delete files already stored in Drive.
 
-### 5. Security and contact
-
-This personal setup cannot guarantee risk-free storage. The owner should secure their Google account and devices and should not publicly share backup folders. Privacy questions may be sent to [weixiang.hong@outlook.com](mailto:weixiang.hong@outlook.com).

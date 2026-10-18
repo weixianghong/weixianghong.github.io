@@ -7,6 +7,7 @@ read_time: false
 comments: false
 share: false
 related: false
+sitemap: false
 excerpt: "Z475 Backup 使用 Google Drive API 为个人 Linux 服务器保存和恢复备份文件。"
 ---
 

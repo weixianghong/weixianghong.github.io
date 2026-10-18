@@ -101,6 +101,8 @@ claude --version
 | `claude-pro-sonnet-4-6` | Sonnet |
 | `claude-pro-haiku-4-5-20251001` | Haiku |
 
+Claude Code 除主对话外，还可能在后台任务或切换模型时使用 Opus / Sonnet / Haiku 的默认模型。因此下面的安装命令会**同时设置三个模型家族映射**，避免发送网关尚未授权的默认模型 ID。特别是 `ANTHROPIC_DEFAULT_HAIKU_MODEL`，它还负责部分后台功能。参见 [Claude Code 官方模型配置文档](https://code.claude.com/docs/en/model-config#environment-variables)。
+
 **不要使用旧的 `claude-opus-5-5` 名称。** 它曾经对应 Console API，管理员正在停用旧路由；即使某次请求成功，也不代表使用了 OAuth。以下命令全部使用新别名。
 
 OAuth 路由共享上游订阅的使用额度，**不是无限调用**；高峰期可能出现限流或额度不足。LiteLLM Virtual Key 自身也可能有预算或模型权限限制，这些限制与上游订阅额度是两套机制。
@@ -116,6 +118,9 @@ OAuth 路由共享上游订阅的使用额度，**不是无限调用**；高峰�
 unset ANTHROPIC_API_KEY HTTPS_PROXY HTTP_PROXY ALL_PROXY
 export ANTHROPIC_BASE_URL="http://lenovo-z475.tail8387b0.ts.net:4000"
 export ANTHROPIC_MODEL="claude-pro-opus-5-5"
+export ANTHROPIC_DEFAULT_OPUS_MODEL="claude-pro-opus-5-5"
+export ANTHROPIC_DEFAULT_SONNET_MODEL="claude-pro-sonnet-4-6"
+export ANTHROPIC_DEFAULT_HAIKU_MODEL="claude-pro-haiku-4-5-20251001"
 read -rs "ANTHROPIC_AUTH_TOKEN?请粘贴你的 Virtual Key（输入不会显示）: "
 echo
 export ANTHROPIC_AUTH_TOKEN
@@ -134,6 +139,9 @@ Remove-Item Env:HTTPS_PROXY -ErrorAction SilentlyContinue
 Remove-Item Env:HTTP_PROXY -ErrorAction SilentlyContinue
 $env:ANTHROPIC_BASE_URL = "http://lenovo-z475.tail8387b0.ts.net:4000"
 $env:ANTHROPIC_MODEL = "claude-pro-opus-5-5"
+$env:ANTHROPIC_DEFAULT_OPUS_MODEL = "claude-pro-opus-5-5"
+$env:ANTHROPIC_DEFAULT_SONNET_MODEL = "claude-pro-sonnet-4-6"
+$env:ANTHROPIC_DEFAULT_HAIKU_MODEL = "claude-pro-haiku-4-5-20251001"
 $secret = Read-Host "请输入你的 Virtual Key" -AsSecureString
 $bstr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secret)
 try {
@@ -170,7 +178,7 @@ cd C:\path\to\my-project
 claude --model claude-pro-opus-5-5
 ```
 
-日常使用记住两点：**先确保 Tailscale 已连接**；使用的终端里要有上述三个环境变量（`ANTHROPIC_BASE_URL`、`ANTHROPIC_AUTH_TOKEN`、`ANTHROPIC_MODEL`）。
+日常使用记住两点：**先确保 Tailscale 已连接**；使用的终端里要有上述连接和模型环境变量（`ANTHROPIC_BASE_URL`、`ANTHROPIC_AUTH_TOKEN`、`ANTHROPIC_MODEL`、`ANTHROPIC_DEFAULT_OPUS_MODEL`、`ANTHROPIC_DEFAULT_SONNET_MODEL`、`ANTHROPIC_DEFAULT_HAIKU_MODEL`）。
 
 你的 Virtual Key 可能有管理员设置的**累计美元预算**；即使密钥没有到期时间，预算用完也需要找管理员调整。这是网关内部的用量管理，不等于 Anthropic Console API 实际扣费。
 
@@ -181,6 +189,7 @@ claude --model claude-pro-opus-5-5
 | `Could not resolve host` / 找不到域名 | Tailscale 是否已连接、邀请是否已接受；务必使用完整 `.ts.net` 域名 |
 | `Connection timed out` | 先运行第 3 节的健康检查；联系管理员确认网关在线以及共享访问权限 |
 | 健康检查 200，但 Claude Code 无法对话 | 检查当前终端的 `ANTHROPIC_BASE_URL`、模型名称和个人 Virtual Key |
+| 主对话正常，但后台或工具调用报 `model not found` / 无权限 | 检查三个 `ANTHROPIC_DEFAULT_*_MODEL` 映射是否都已设置，尤其是 `ANTHROPIC_DEFAULT_HAIKU_MODEL` |
 | `401 Unauthorized` | 检查 Virtual Key 是否粘贴完整，是否误用了其他人的 Key |
 | `403` 或预算相关错误 | 可能没有访问权限、额度用完或 Key 被停用；联系管理员 |
 | `429` | 通常与共享订阅额度、限流或网关限制有关，稍后重试或联系管理员 |

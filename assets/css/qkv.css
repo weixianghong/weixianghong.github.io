@@ -1,0 +1,27 @@
+/* Article-specific diagrams; inherit the site's light/dark theme. */
+.qkv-intro { color: var(--muted); font-size: 1.05em; }
+.qkv-reading-map { margin: 2em 0; padding: 0.1em 0 0.1em 1.1em; border-left: 2px solid var(--accent); }
+.qkv-reading-map p { margin-bottom: 0.6em; }
+.qkv-figure { display: block; margin: 2.2em 0; }
+.qkv-figure svg { display: block; width: 100%; max-width: 600px; height: auto; margin: 0 auto; overflow: visible; }
+.qkv-figure svg text { font-family: "Inter", "PingFang SC", "Microsoft YaHei", sans-serif; font-size: 24px; fill: var(--text); }
+.qkv-figure .node { fill: var(--surface); stroke: var(--border-strong); stroke-width: 1.5; }
+.qkv-figure .key-node { fill: var(--tag-bg); stroke: var(--accent); stroke-width: 1.5; }
+.qkv-figure .edge { fill: none; stroke: var(--muted); stroke-width: 1.8; }
+.qkv-figure .qkv-muted { fill: var(--muted); }
+.qkv-figure figcaption { margin-top: 0.9em; font-family: inherit; font-size: 0.83em; line-height: 1.65; color: var(--muted); text-align: left; }
+.qkv-caption-label { color: var(--accent); font-weight: 600; }
+.qkv-article-table { width: 100%; overflow-x: auto; margin: 1.5em 0; }
+.qkv-article-table table { margin: 0; font-size: 0.9em; border-color: var(--border); }
+.qkv-article-table th, .qkv-article-table td { border-color: var(--border); padding: 0.65em; }
+.qkv-article-table thead { background: var(--tag-bg); border-color: var(--border); }
+.qkv-formula { overflow-x: auto; margin: 1.5em 0; padding: 0.4em 0; }
+.page__content .MathJax_Display,
+.page__content .MJXc-display,
+.page__content .MathJax_PHTML_Display { max-width: 100%; overflow-x: auto; overflow-y: hidden; padding: 0.35em 0; }
+.qkv-references { font-size: 0.88em; overflow-wrap: anywhere; }
+@media (max-width: 600px) {
+  .qkv-intro { font-size: 1em; }
+  .qkv-figure { margin: 1.7em 0; }
+  .qkv-article-table th, .qkv-article-table td { padding: 0.5em; }
+}

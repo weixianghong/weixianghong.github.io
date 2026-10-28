@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 520" role="img" aria-labelledby="qkv-read-title qkv-read-desc">
+  <title id="qkv-read-title">一次 attention 读取：Query 和 Key 决定权重，权重作用于 Value</title>
+  <desc id="qkv-read-desc">查询 q 与候选 k1、k2、k3 匹配后，假设得到权重 0.1、0.8、0.1。使用同样的权重汇总 v1、v2、v3，得到输出 o。Key 与 Value 按位置一一对应。</desc>
+  <defs><marker id="qkv-arrow-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--muted)"/></marker></defs>
+  <rect class="key-node" x="180" y="10" width="240" height="62" rx="8"/>
+  <text x="300" y="50" text-anchor="middle">Query · 当前需求 q</text>
+  <path class="edge" d="M255 72 L100 125 M300 72 V125 M345 72 L500 125" marker-end="url(#qkv-arrow-b)"/>
+  <rect class="node" x="20" y="135" width="160" height="60" rx="8"/>
+  <rect class="key-node" x="220" y="135" width="160" height="60" rx="8"/>
+  <rect class="node" x="420" y="135" width="160" height="60" rx="8"/>
+  <text x="100" y="174" text-anchor="middle">Key · k₁</text><text x="300" y="174" text-anchor="middle">Key · k₂</text><text x="500" y="174" text-anchor="middle">Key · k₃</text>
+  <text class="qkv-muted" x="300" y="235" text-anchor="middle">匹配分数 → softmax → 读取权重</text>
+  <text x="100" y="283" text-anchor="middle">0.1</text><text x="300" y="283" text-anchor="middle" font-weight="600">0.8</text><text x="500" y="283" text-anchor="middle">0.1</text>
+  <path class="edge" d="M100 295 V325 M300 295 V325 M500 295 V325" marker-end="url(#qkv-arrow-b)"/>
+  <rect class="node" x="20" y="335" width="160" height="60" rx="8"/>
+  <rect class="key-node" x="220" y="335" width="160" height="60" rx="8"/>
+  <rect class="node" x="420" y="335" width="160" height="60" rx="8"/>
+  <text x="100" y="374" text-anchor="middle">Value · v₁</text><text x="300" y="374" text-anchor="middle">Value · v₂</text><text x="500" y="374" text-anchor="middle">Value · v₃</text>
+  <path class="edge" d="M100 395 L245 440 M300 395 V440 M500 395 L355 440" marker-end="url(#qkv-arrow-b)"/>
+  <rect class="key-node" x="40" y="450" width="520" height="60" rx="8"/>
+  <text x="300" y="490" text-anchor="middle">输出 o = 0.1v₁ + 0.8v₂ + 0.1v₃</text>
+</svg>

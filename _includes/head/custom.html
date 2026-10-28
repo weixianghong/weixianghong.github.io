@@ -1,6 +1,7 @@
 {% include base_path %}
 
 <!-- start custom head snippets -->
+{% if page.extra_css %}<link rel="stylesheet" href="{{ base_path }}{{ page.extra_css }}">{% endif %}
 
 <link rel="apple-touch-icon" sizes="57x57" href="{{ base_path }}/images/apple-touch-icon-57x57.png">
 <link rel="apple-touch-icon" sizes="60x60" href="{{ base_path }}/images/apple-touch-icon-60x60.png">
@@ -102,7 +103,8 @@
     font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   }
   h1, h2, h3, .page__title { letter-spacing: -0.015em; font-weight: 700; }
-  .page__content { font-size: 1.05em; line-height: 1.7; }
+  .page__content { font-size: 1em; line-height: 1.7; }
+  .page__title { line-height: 1.25; }
 
   /* Links */
   a { color: var(--accent); }

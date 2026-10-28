@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 470" role="img" aria-labelledby="qkv-bottleneck-title qkv-bottleneck-desc">
+  <title id="qkv-bottleneck-title">从固定句子编码，到按需读取原文</title>
+  <desc id="qkv-bottleneck-desc">上半图：源句经过编码器变成一个固定大小的向量 c，供所有解码步骤使用。下半图：保存每个源位置的表示，当前解码状态决定如何加权读取它们。</desc>
+  <defs><marker id="qkv-arrow-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--muted)"/></marker></defs>
+  <text x="20" y="35" font-weight="600">固定编码：每一步读同一份摘要</text>
+  <rect class="node" x="20" y="65" width="175" height="65" rx="8"/>
+  <text x="107" y="106" text-anchor="middle">源句 → 编码器</text>
+  <path class="edge" d="M195 98 H245" marker-end="url(#qkv-arrow-a)"/>
+  <rect class="key-node" x="250" y="65" width="90" height="65" rx="8"/>
+  <text x="295" y="106" text-anchor="middle">c</text>
+  <path class="edge" d="M340 98 H400" marker-end="url(#qkv-arrow-a)"/>
+  <rect class="node" x="405" y="65" width="175" height="65" rx="8"/>
+  <text x="492" y="106" text-anchor="middle">生成译文</text>
+  <text class="qkv-muted" x="295" y="170" text-anchor="middle">全部源句信息经过固定大小的 c</text>
+  <path class="edge" d="M20 205 H580"/>
+  <text x="20" y="250" font-weight="600">Attention：每一步重新决定读哪里</text>
+  <rect class="node" x="20" y="280" width="160" height="65" rx="8"/>
+  <text x="100" y="321" text-anchor="middle">h₁ · 小猫</text>
+  <rect class="node" x="220" y="280" width="160" height="65" rx="8"/>
+  <text x="300" y="321" text-anchor="middle">h₂ · 坐在</text>
+  <rect class="node" x="420" y="280" width="160" height="65" rx="8"/>
+  <text x="500" y="321" text-anchor="middle">h₃ · 垫子上</text>
+  <path class="edge" d="M100 345 L250 390 M300 345 V390 M500 345 L350 390" marker-end="url(#qkv-arrow-a)"/>
+  <rect class="key-node" x="200" y="395" width="200" height="60" rx="8"/>
+  <text x="300" y="433" text-anchor="middle">当前步骤的 cₜ</text>
+</svg>

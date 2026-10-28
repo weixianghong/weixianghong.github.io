@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 480" role="img" aria-labelledby="qkv-self-title qkv-self-desc">
+  <title id="qkv-self-title">Self-attention：同一份输入分成查询、匹配和内容三条路径</title>
+  <desc id="qkv-self-desc">上一层各位置的表示 X 分别乘以 WQ、WK、WV，形成 Q、K、V。Q 与 K 计算注意力矩阵 A，A 对 V 加权汇总得到本头输出 O。</desc>
+  <defs><marker id="qkv-arrow-c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--muted)"/></marker></defs>
+  <rect class="node" x="100" y="10" width="400" height="60" rx="8"/>
+  <text x="300" y="49" text-anchor="middle">上一层各位置的表示 X</text>
+  <path class="edge" d="M230 70 L100 125 M300 70 V125 M370 70 L500 125" marker-end="url(#qkv-arrow-c)"/>
+  <rect class="key-node" x="20" y="135" width="160" height="65" rx="8"/>
+  <rect class="key-node" x="220" y="135" width="160" height="65" rx="8"/>
+  <rect class="node" x="420" y="135" width="160" height="65" rx="8"/>
+  <text x="100" y="176" text-anchor="middle">Q = XW<tspan baseline-shift="sub" font-size="18">Q</tspan></text>
+  <text x="300" y="176" text-anchor="middle">K = XW<tspan baseline-shift="sub" font-size="18">K</tspan></text>
+  <text x="500" y="176" text-anchor="middle">V = XW<tspan baseline-shift="sub" font-size="18">V</tspan></text>
+  <path class="edge" d="M100 200 V255 M300 200 L230 255" marker-end="url(#qkv-arrow-c)"/>
+  <rect class="key-node" x="20" y="265" width="360" height="90" rx="8"/>
+  <text x="200" y="301" text-anchor="middle">QKᵀ / √dₖ → softmax</text>
+  <text x="200" y="337" text-anchor="middle">A：谁从哪里读多少</text>
+  <path class="edge" d="M200 355 L265 400 M500 200 V370 L365 400" marker-end="url(#qkv-arrow-c)"/>
+  <rect class="key-node" x="160" y="410" width="280" height="60" rx="8"/>
+  <text x="300" y="449" text-anchor="middle">O = AV · 汇总内容</text>
+</svg>

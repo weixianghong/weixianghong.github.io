@@ -4,7 +4,7 @@ date: 2026-10-28
 permalink: /blogs/where-qkv-comes-from/
 lang: zh-CN
 read_time: true
-read_time_minutes: 7
+read_time_minutes: 8
 extra_css: /assets/css/qkv.css
 excerpt: "从机器翻译的固定编码瓶颈，到按需读取、Key–Value 分工与 self-attention：沿着问题理解 QKV，而不是从公式开始背诵。"
 tags:
@@ -138,7 +138,7 @@ $$
 
 早期翻译 attention 的查询来自译文 decoder，被读取的信息来自源句 encoder。再往前一步：同一句话的每个位置，也可以查询其他位置。
 
-例如“小猫吃完鱼后，它睡着了”，“它”可以通过读取前文，形成更有用的表示。令上一层各位置的表示组成矩阵 $X$，同一份输入分别产生 Q、K、V：
+例如“小猫吃完鱼后，它睡着了”，各个位置可以通过读取其他位置，形成更有用的表示。Self-attention 本身并没有规定只能看前文。令上一层各位置的表示组成矩阵 $X$，同一份输入分别产生 Q、K、V：
 
 <figure class="qkv-figure">
 {% include blog/qkv-self.svg %}
@@ -156,11 +156,31 @@ $$
 
 $QK^\top$ 是位置之间的打分表：第 $i$ 行表示查询 $i$ 对各候选位置的分数。逐行 softmax 后，乘以 V 完成读取。除以 $\sqrt{d_k}$ 用于控制点积尺度，避免 softmax 过于饱和；多头则让多组投影分别读取，再组合结果。[6]
 
+### 机器翻译，为什么还要“只看前面”？
+
+**翻译当然可以看完整源句；需要限制的是正在生成的译文。** 原始 Transformer 的三个 attention 层，读取范围并不相同：[6]
+
+<div class="qkv-article-table" role="region" aria-label="机器翻译中三种 attention 的读取范围" tabindex="0" markdown="1">
+
+| Attention 层 | Q 来自哪里 | K、V 的可见范围 |
+|---|---|---|
+| Encoder self-attention | 源句 | 完整源句，前后都能看 |
+| Decoder self-attention | 译文 | 已知的译文前缀 |
+| Encoder–decoder attention（cross-attention） | 译文 | 完整源句 |
+
+</div>
+
+例如翻译 bank 时，完全可以利用源句后面的 river 判断它是“河岸”。但如果逐词生成译文，第 $t$ 个词还没生成时，后面的译文自然不可用。这个自回归模型写成：
+
+$$
+p(y\mid x)=\prod_t p(y_t\mid y_{<t},x).
+$$
+
+$x$ 是完整源句，$y_{<t}$ 才是受限的译文前缀。训练时虽然有完整参考译文，也要把 decoder 输入右移，并用 causal mask 遮住后续位置，避免模型偷看待预测的答案；实现上是在 softmax 前把禁止读取的位置设为 $-\infty$。[6]
+
+这里的 **causal attention** 指这种单向读取约束，与统计学里研究干预、因果效应的 **causal inference（因果推断）** 不同。逐词生成也是模型的选择，并非机器翻译任务本身要求所有模型都只能这样做。
+
 2017 年的 Transformer 把 self-attention 放到跨位置交互的中心，结合位置编码、前馈网络等组件构成完整架构。[6] 它不是 attention 的起点。QKV 也不是凭空冒出的三个矩阵：它们把“当前需要什么”“怎样匹配”“传递什么”变成了可以分别学习的功能。
-
-## 文末一笔：KV cache
-
-因果 self-attention 生成新 token 时，用新位置的 Q 查询历史位置的 K、V。旧位置看不到未来，已有前缀不变时，它们在各层算出的 K、V 就可以缓存复用。旧 Q 通常不需要保留，因为下一次查询由新位置发起。这便是 KV cache：用存储换取少做历史位置的重复计算。
 
 ## 参考文献
 

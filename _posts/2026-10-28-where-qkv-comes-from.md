@@ -16,24 +16,24 @@ tags:
   - deep-learning
 ---
 
-<p class="qkv-intro">为什么每个 token 已经有一个向量，Attention 还要把它变成 Query、Key、Value 三份？答案藏在 Transformer 出现之前。</p>
+<p class="qkv-intro">为什么每个 token 已经有一个向量，Attention 还要把它变成 Query、Key、Value 三份？</p>
 
-一言以概之，QKV 不是数学定理要求的唯一结构，而是围绕一个问题逐渐形成的设计：**怎样让神经网络根据当前需要，从一组信息里读出有用的内容？** 沿着机器翻译这条线，三个字母就不再显得突然。
+一言以概之，QKV 不是数学定理要求的唯一结构，而是围绕一个问题逐渐形成的设计：**怎样让神经网络根据当前需要，从一组信息里读出有用的内容？** 沿着机器翻译这条线，对 QKV 的理解就清晰多了。
 
-<h2 id="bottleneck">抛弃固定长度 representation</h2>
+<h2 id="bottleneck">摒弃固定长度 representation</h2>
 
 早期一种典型的机器翻译方案是 encoder–decoder：encoder 用 RNN 或 LSTM 读完源句，把它压成固定维度的 representation $c$；decoder 以此为条件，逐词生成译文。2014 年的 Seq2Seq 是其中的重要代表。[\[1\]](#qkv-ref-1)
 
-这里逐词生成的是**译文**，不是逐词获得原文。普通整句翻译开始时，完整源句已经给定；后面的词也能帮助理解前面的词。下面要解决的，是怎样把这些已知信息交给 decoder。
+注意与ChatGPT区分，这里逐词生成的是**译文**，不是逐词获得原文。译文翻译开始时，完整源句已经给定，翻译过程可以 access 所有源句的词。问题的关键是， decoder 如何去利用这些信息。
 
-这像读完材料后把原文收起来，只带着一张固定大小的笔记完成翻译。句子越长，细节越难保留。一个自然的改进是：**把原文每个位置的表示都留下，让 decoder 需要时回头读取。**
+在老派的机器翻译，比如 Seq2Seq，它们的工作方式像是读完原文后把原文收起来，只带着一张固定大小的笔记完成翻译。句子越长，细节自然越难保留。那么，一个自然的改进就是：**把原文每个位置的表示都留下，让 decoder 需要时回头读取。**
 
 <figure class="qkv-figure">
 {% include blog/qkv-bottleneck.svg %}
 <figcaption><span class="qkv-caption-label">图 1</span> 从共用一个句子 representation，改成每一步按需读取。h₁、h₂、h₃ 是包含上下文的源位置表示，cₜ 是当前步骤读出的信息。</figcaption>
 </figure>
 
-<h2 id="soft-alignment">Attention：每一步，重新决定读哪里</h2>
+<h2 id="soft-alignment">Attention Is All You Need</h2>
 
 把“小猫坐在垫子上”翻译成“The cat sits on the mat”，生成 cat 时应该更多参考“小猫”，生成 sits 时则更多参考“坐在”。我们希望模型学会类似这样的权重：
 
@@ -47,7 +47,7 @@ tags:
 
 </div>
 
-这些数值仅作示意。实现时，用 decoder 当前状态 $s$ 与每个源位置的表示 $h_j$ 打分，再用 softmax 转为权重：
+实现时，用 decoder 当前状态 $s$ 与每个源位置的表示 $h_j$ 打分，再用 softmax 转为权重：
 
 $$
 e_j=\operatorname{score}(s,h_j),\qquad
@@ -60,15 +60,15 @@ $$
 c=\sum_j\alpha_jh_j.
 $$
 
-decoder 用它来帮助预测目标词。下一步状态变了，读取重点也可以改变。Bahdanau 等人在 2014 年发布、发表于 ICLR 2015 的工作，让模型把翻译与这种“软对齐”一起学出来。[\[2\]](#qkv-ref-2)
+decoder 用它来帮助预测目标词。下一步状态变了，读取重点也随之改变。Bahdanau 等人在 2014 年发布、发表于 ICLR 2015 的工作，让模型把翻译与这种“软对齐”一起学出来。[\[2\]](#qkv-ref-2)
 
-“软”是指不必只选一个位置，而是连续地混合读取多个位置。整条计算链可微，翻译损失可以反向传播，通常不需要人工标注每个词该对齐哪里。
+“软”是指不必只选一个位置，而是连续地混合读取多个位置。整条计算链可以 differentiate，翻译损失可以 BP，通常不需要人工标注每个词该对齐哪里。
 
 最初的打分可以由一个小神经网络完成；2015 年 Luong 等人又研究了点积等形式。[\[3\]](#qkv-ref-3) **Attention 的核心是按需加权读取，点积只是打分的一种实现。**
 
-<h2 id="key-value">Q、K、V：把“找到”与“读出”分开</h2>
+<h2 id="key-value">Q、K、V 是怎么来的</h2>
 
-回看刚才的过程，三个角色已经出现了：
+在刚才的过程中，其实三个角色已经出现了：
 
 <div class="qkv-article-table" role="region" aria-label="早期 attention 与 QKV 的对应" tabindex="0" markdown="1">
 
@@ -80,9 +80,7 @@ decoder 用它来帮助预测目标词。下一步状态变了，读取重点也
 
 </div>
 
-**早期的 $h_j$ 同时承担了 Key 和 Value：既决定“读哪里”，又充当“读出的内容”。** 但这两件事不一定要用同一套表示。
-
-想象查询“财务部的张三”：定位时需要姓名、部门，找到后想取回的却是电话号码。神经网络也可以分别学习适合匹配和适合传递的表示。2015 年的 End-to-End Memory Networks、2016 年的 Key-Value Memory Networks 已体现了这种分工。[\[4\]](#qkv-ref-4)[\[5\]](#qkv-ref-5)
+**早期的 $h_j$ 同时承担了 Key 和 Value：既决定“读哪里”，又充当“读出的内容”。** 但这两件事不一定要用同一套表示。研究发现，神经网络也可以分别学习适合匹配和适合传递的表示。2015 年的 End-to-End Memory Networks、2016 年的 Key-Value Memory Networks 已体现了这种分工。[\[4\]](#qkv-ref-4)[\[5\]](#qkv-ref-5)
 
 <figure class="qkv-figure">
 {% include blog/qkv-read.svg %}
@@ -91,9 +89,7 @@ decoder 用它来帮助预测目标词。下一步状态变了，读取重点也
 
 于是，QKV 可以理解为一次“软查询”：**Q 提供需求，K 用于定位，V 提供内容。** 它不像普通字典只返回精确匹配的一项，而是对多个候选做加权汇总。
 
-<h2 id="projections">为什么还要学习三组投影？</h2>
-
-下面是设计上的解释，不是对历史的逐步复述。假设位置 $i$ 的表示是行向量 $x_i$，直接令 $q_i=k_i=v_i=x_i$，依然能做 attention。独立投影的意义在于给不同角色更多自由：
+假设位置 $i$ 的表示是行向量 $x_i$，直接令 $q_i=k_i=v_i=x_i$，当然能做 attention。但是，独立投影的意义在于给不同角色更多自由：
 
 $$
 \begin{aligned}
@@ -102,41 +98,6 @@ k_i&=x_iW_K,\\
 v_i&=x_iW_V.
 \end{aligned}
 $$
-
-首先，**有关系不等于很相似。** 在“小猫吃了鱼”中，“吃”可能需要读取“小猫”的信息，但动作与实体未必在原始表示空间里相近。分别变换查询方和候选方，可以学习更合适的兼容关系：
-
-$$
-q_i k_j^\top=x_iW_QW_K^\top x_j^\top.
-$$
-
-这种关系还可以有方向性：“动作寻找施事者”，不必与“实体寻找动作”采用同样的打分。$W_V$ 则另外学习选中一个位置后，应该传递什么内容。
-
-三组矩阵通过任务损失共同训练；我们并没有人工规定哪一维代表“主语”，也没有保证某个 head 专门处理指代。
-
-## 手算一次，看清匹配与内容的区别
-
-设查询 $q=[1,0]$，有三个候选位置：
-
-<div class="qkv-article-table" role="region" aria-label="手算示例的 Key 和 Value" tabindex="0" markdown="1">
-
-| 位置 | Key | Value |
-|---|---|---|
-| A | $[2,0]$ | $[1,0]$ |
-| B | $[0,2]$ | $[0,1]$ |
-| C | $[1,1]$ | $[1,1]$ |
-
-</div>
-
-点积分数是 $[2,0,1]$。按 Transformer 的做法除以 $\sqrt{2}$，再做 softmax，权重约为 $[0.576,0.140,0.284]$。最后汇总的是 **Value**：
-
-$$
-\begin{aligned}
-o&=0.576v_A+0.140v_B+0.284v_C\\
- &\approx[0.860,0.424].
-\end{aligned}
-$$
-
-保持 Q、K 不变，只改 V，权重不变，读出的内容却会变；保持 V 不变，只改 Q 或 K，则会改变混合比例。这就是匹配与内容传递的分工。
 
 <h2 id="self-attention">Self-attention：让同一句话内部相互读取</h2>
 
@@ -160,7 +121,7 @@ $$
 
 $QK^\top$ 是位置之间的打分表：第 $i$ 行表示查询 $i$ 对各候选位置的分数。逐行 softmax 后，乘以 V 完成读取。除以 $\sqrt{d_k}$ 用于控制点积尺度，避免 softmax 过于饱和；多头则让多组投影分别读取，再组合结果。[\[6\]](#qkv-ref-6)
 
-### 机器翻译与 GPT：分别能看见什么？
+### 机器翻译 v.s. GPT
 
 典型的 encoder–decoder 用于机器翻译时，可以看完整源句；只有正在生成的译文存在限制。
 
@@ -188,7 +149,7 @@ $x$ 是完整源句，$y_{<t}$ 才是受限的译文前缀。训练时虽然有�
 
 这里的 **causal attention** 指这种单向读取约束，与统计学里研究干预、因果效应的 **causal inference（因果推断）** 不同。逐词生成也是模型的选择，并非机器翻译任务本身要求所有模型都只能这样做。
 
-2017 年的 Transformer 把 self-attention 放到跨位置交互的中心，结合 positional encoding、前馈网络等组件构成完整架构。[\[6\]](#qkv-ref-6) 它不是 attention 的起点。QKV 也不是凭空冒出的三个矩阵：它们把“当前需要什么”“怎样匹配”“传递什么”变成了可以分别学习的功能。
+在 2017 年，Transformer 横空出世，把 self-attention 放到了 sequential processing 的中心，结合 positional encoding、前馈网络等组件构成完整架构。[\[6\]](#qkv-ref-6) 它不是 attention 的起点。
 
 ## 参考文献
 

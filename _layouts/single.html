@@ -53,6 +53,7 @@ layout: default
       {% endunless %}
 
       <section class="page__content" itemprop="text">
+        {% if page.series == "inference" %}{% include inference/nav.html %}{% endif %}
         {{ content }}
         {% if page.link %}<div><a href="{{ page.link }}" class="btn">{{ site.data.ui-text[site.locale].ext_link_label | default: "Direct Link" }}</a></div>{% endif %}
       </section>
@@ -66,7 +67,7 @@ layout: default
 
       {% if page.share %}{% include social-share.html %}{% endif %}
 
-      {% include post_pagination.html %}
+      {% if page.series == "inference" %}{% include inference/pagination.html %}{% else %}{% include post_pagination.html %}{% endif %}
     </div>
 
     {% if site.comments.provider and page.comments %}

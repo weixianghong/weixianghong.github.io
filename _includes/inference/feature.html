@@ -1,0 +1,16 @@
+{% assign series = site.data.inference_series %}
+<section class="series-feature" aria-labelledby="inference-series-title">
+  <div class="series-feature__head">
+    <div>
+      <span class="series-kicker">A reading collection · 推理实战</span>
+      <h2 id="inference-series-title"><a href="{{ base_path }}{{ series.url }}">{{ series.title }}</a></h2>
+      <p class="series-feature__deck">{{ series.subtitle }}<br>先弄明白数据怎么走，再看 token 为什么出得快。</p>
+      <p class="series-feature__meta">5 篇中文笔记 &nbsp;·&nbsp; 每篇约 6–8 分钟</p>
+      {% if page.url == series.url %}<a class="series-feature__cta" href="{{ base_path }}{{ series.chapters.first.url }}">从第一篇开始 <span aria-hidden="true">→</span></a>{% else %}<a class="series-feature__cta" href="{{ base_path }}{{ series.url }}">阅读这个系列 <span aria-hidden="true">↗</span></a>{% endif %}
+    </div>
+    <div class="series-feature__art">{% include inference/cover.svg %}</div>
+  </div>
+  <nav class="series-feature__chapters" aria-label="系列文章快捷入口">
+    {% for chapter in series.chapters %}<a href="{{ base_path }}{{ chapter.url }}"><span>{{ chapter.number }}</span>{{ chapter.topic }}</a>{% endfor %}
+  </nav>
+</section>

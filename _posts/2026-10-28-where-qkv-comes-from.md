@@ -3,6 +3,8 @@ title: "Q、K、V 从何而来：Attention 的演化与直觉"
 date: 2026-10-28
 permalink: /blogs/where-qkv-comes-from/
 lang: zh-CN
+series: inference
+series_order: 1
 read_time: true
 read_time_minutes: 8
 extra_css: /assets/css/qkv.css

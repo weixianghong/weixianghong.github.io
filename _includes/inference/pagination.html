@@ -1,0 +1,7 @@
+{% assign inference_index = page.series_order | minus: 1 %}
+{% assign inference_prev = inference_index | minus: 1 %}
+{% assign inference_next = inference_index | plus: 1 %}
+<nav class="series-footer" aria-label="系列阅读导航">
+  {% if inference_prev >= 0 %}{% assign prev_chapter = site.data.inference_series.chapters[inference_prev] %}<a href="{{ base_path }}{{ prev_chapter.url }}"><span>← 上一篇 · {{ prev_chapter.number }}</span>{{ prev_chapter.title }}</a>{% else %}<a href="{{ base_path }}{{ site.data.inference_series.url }}"><span>回到系列</span>查看全部五篇</a>{% endif %}
+  {% if inference_next < site.data.inference_series.chapters.size %}{% assign next_chapter = site.data.inference_series.chapters[inference_next] %}<a class="series-footer__next" href="{{ base_path }}{{ next_chapter.url }}"><span>下一篇 · {{ next_chapter.number }} →</span>{{ next_chapter.title }}</a>{% else %}<a class="series-footer__next" href="{{ base_path }}{{ site.data.inference_series.url }}"><span>读完了，回到目录 ↗</span>推理实战 · 全系列</a>{% endif %}
+</nav>

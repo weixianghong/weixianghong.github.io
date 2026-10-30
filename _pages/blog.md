@@ -1,5 +1,7 @@
 ---
 layout: archive
+title: "Blogs"
+extra_css: /assets/css/inference-series.css
 permalink: /blogs/
 redirect_from:
   - /blog/
@@ -8,8 +10,13 @@ author_profile: true
 
 {% include base_path %}
 
+{% include inference/feature.html %}
+
+<h2 class="group-title">更多文章</h2>
+
 {% capture written_year %}'None'{% endcapture %}
 {% for post in site.posts %}
+{% unless post.series == "inference" %}
 {% capture year %}{{ post.date | date: '%Y' }}{% endcapture %}
 {% if year != written_year %}
 <h2 class="group-title">{{ year }}</h2>
@@ -29,4 +36,5 @@ author_profile: true
 <p class="post-card__excerpt">{{ post.excerpt | strip_html | truncate: 250 }}</p>
 {% endif %}
 </div>
+{% endunless %}
 {% endfor %}

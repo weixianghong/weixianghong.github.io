@@ -1,0 +1,115 @@
+---
+title: "GPU 很快，为什么还要等显存？"
+date: 2026-10-29 09:00:00 -0700
+permalink: /blogs/inference-memory-wall/
+lang: zh-CN
+series: inference
+series_order: 2
+read_time: true
+read_time_minutes: 7
+excerpt: "拿 H100 和一个 8B 模型算一笔账：计算只要 0.016 毫秒，搬参数却要 4.8 毫秒。prefill、decode 和 batching 的区别，就在这里。"
+tags: [llm, inference, gpu]
+---
+
+我以前看 GPU，最关心的是算力：有多少 Tensor Core，一秒能做多少次运算。后来才发现，大模型推理有时候根本不是算不动，而是数据还没送到，计算单元已经在等了。
+
+先拿一块 NVIDIA H100 SXM 80GB 来说。参数主要放在计算芯片旁边的显存里，计算在芯片里面做。算到某一层时，要把这一层用到的参数分块送进来。问题就在于：**算得快，不代表喂得饱。**
+
+## 显存不都叫 HBM
+
+H100 SXM 用的是 HBM3，但“显存就是 HBM”不太准确。消费级 GPU 常用 GDDR；HBM 是显存的一种实现，全名是 High Bandwidth Memory，本质上仍然是 DRAM。
+
+为什么数据中心 GPU 喜欢用它？参数大是一方面，更关键的是需要**在有限功耗和封装面积里，把数据搬得足够快**。HBM 把多层 DRAM 堆起来，通过很宽的接口连接计算芯片。它不是普通内存的反义词，而是一种优先追求高带宽的内存设计。三星、SK 海力士和美光是主流供应商；这和“全世界只有三家公司掌握这项技术”不是一个说法。[^hbm]
+
+<figure class="inference-figure">
+{% include inference/gpu-memory.svg %}
+<figcaption>参数从 HBM 分块读进计算芯片。芯片里也有缓存和工作存储，但容不下整个大模型。示意图不按面积比例绘制。</figcaption>
+</figure>
+
+## 拿一个 8B 模型算笔账
+
+H100 SXM 启用了 132 个 SM（Streaming Multiprocessor，流式多处理器），每个 SM 里有 4 个 Tensor Core，专门加速矩阵乘加。SM 里还有普通运算单元、寄存器、共享内存等，不能把它只看成四个矩阵计算器。[^hopper]
+
+假设我们跑的是一个 **80 亿参数的稠密模型**，权重使用 FP16 或 BF16，也就是每个参数 **16 bit = 2 字节**。先只算权重，不算 KV Cache、激活和运行时开销：
+
+$$
+8\times10^9\times2\text{ bytes}=16\text{ GB}.
+$$
+
+H100 SXM 的标称 HBM 带宽是 3.35 TB/s。理想情况下，把 16 GB 权重读一遍，需要：
+
+$$
+\frac{16\text{ GB}}{3350\text{ GB/s}}\approx4.8\text{ ms}.
+$$
+
+再看计算。对稠密 Transformer，单个 token 的主要权重计算量可以粗估为 $2P$ FLOPs：一次乘法加一次加法，算两次浮点运算。这里 $P$ 是参数量；这条估算先忽略上下文相关的 attention 计算等额外工作。
+
+H100 SXM 的 **FP16/BF16 稠密 Tensor Core 峰值**约为 989 TFLOPS。注意，规格页更显眼的 1,979 TFLOPS 带有结构化稀疏的前提，这里不能拿来直接用。[^spec]
+
+于是，只按峰值计算：
+
+$$
+\frac{2\times8\times10^9}{989\times10^{12}}
+\approx0.016\text{ ms}.
+$$
+
+**搬参数约 4.8 ms，做这些乘加的峰值时间约 0.016 ms，差了接近 300 倍。**
+
+这不是在预测真实延迟。实际小矩阵也跑不到峰值，读写、计算可以重叠，还有很多别的开销。它只是说明一件事：在这个场景里，继续堆算力，未必能让回答快多少。
+
+## 那就把同一份参数多用几次
+
+假如参数搬进来以后，不是只给一个 token 用，而是同时给 300 个 token 用，搬运成本就可以摊开。这对应的术语叫**算术强度**：每搬一个字节，做多少计算。
+
+对于刚才的 16-bit 权重，若一次矩阵计算处理 $B$ 个 token，忽略其他流量，算术强度大约就是 $B$ FLOPs/byte。而 H100 的峰值算力除以带宽，大约是 295 FLOPs/byte。于是才有了“要复用约 300 次，才有机会从等内存变成忙计算”这个直觉。
+
+这里的 300 是这套精度、硬件和简化模型下的粗略分界，不是“到了第 300 个 token，GPU 突然满血”的开关。[^roofline]
+
+训练时，一次通常会处理很多 token，同一份权重能反复使用，所以大块矩阵乘法更有机会吃满算力。当然，训练也可能卡在通信、激活读写等地方，不能一概而论。
+
+推理则要分两步看：prefill 和 decode。
+
+<figure class="inference-figure">
+{% include inference/prefill-decode.svg %}
+<figcaption>prefill 同时处理已知输入；普通自回归 decode 要等上一轮的输出，才能确定下一轮的输入。不同用户之间没有这条依赖，可以拼到一起算。</figcaption>
+</figure>
+
+### Prefill：输入都知道，可以一起算
+
+你贴进去的一大段文章，token 已经全部给定。虽然模型有因果遮罩，每一层仍然可以并行处理这些位置，不必等“读完第一个词”再启动第二个词。
+
+因此，几百上千个输入 token 可以一起用这份权重，矩阵计算更容易发挥出来。这也解释了为什么贴一大段文字进去，模型往往很快就能处理完。
+
+不过，长输入依然要花时间，特别是长上下文 attention；系统还可能把 prefill 切成多个 chunk。不是输入够长就一定快，也不是所有 prefill 都由算力决定。[^phases]
+
+### Decode：一个人用，每一步只有一个新位置
+
+回答就不一样了。普通自回归生成中，下一个 token 是什么，要等上一个生成出来才知道。因此，**对单个请求，一次 decode 通常只推进一个新 token**。这里暂不展开推测解码等一次验证多个候选的优化。
+
+在小 batch、上下文还不特别长的情况下，每轮都要读取大量权重，却只处理很少的新 token。离刚才“复用几百次”的状态差得很远。
+
+那参数能不能留在芯片里，别再搬了？
+
+芯片里确实有存储。H100 SXM 的 L2 缓存是 50 MB，再加上分布在各 SM 的寄存器、共享内存等，也不是一块可以随意装下模型的大内存。16 GB 权重远远放不下。所以，稠密模型每生成一个 token，大部分权重通常还得重新经过 HBM 接口；缓存和融合可以减少局部流量，但不能凭空留住整套参数。[^hopper]
+
+刚才那笔账里，主要乘加对应的有效算力，大约只有 Tensor Core 峰值的 $0.34\%$。这不是监控软件里的“GPU 利用率”，更不表示整块卡什么也没干——**显存接口可能已经很忙，忙的是搬数据。**
+
+## Batching：不是让你多等，而是把大家拼起来
+
+服务商会把很多人的请求放到一起算，叫 batching。每个人仍然只生成自己的下一个 token，但这一步，几十上百个人可以共享一次权重读取。实际服务还常用 continuous batching：有人结束就退出，有新请求就补进来。[^phases]
+
+这样一块卡能服务更多人，整体吞吐量更高。但 batch 越大不一定每个人越快，还要考虑排队、KV Cache 容量、attention 读取和延迟目标。
+
+所以有两件事要分开：**一秒总共产出多少 token，和你一个人一秒能拿到多少 token。** 前者高，后者未必高。
+
+读到这里，下一步的问题就很自然了：既然往返 HBM 这么费事，能不能干脆把模型一直放在计算芯片里面？
+
+## 资料与计算口径
+
+本文的算例使用十进制 GB/TB、16-bit 稠密权重和稠密 Tensor Core 峰值，仅估算主要权重乘加与理想权重读取；不适用于直接估算 MoE 的全部权重流量。规格核对于 2026-10-29。
+
+[^hbm]: [Micron：HBM 的堆叠、接口与带宽](https://www.micron.com/products/memory/hbm)；[TrendForce：三家主要 HBM 供应商](https://www.trendforce.com/presscenter/news/20260213-12929.html)。
+[^hopper]: NVIDIA，[Hopper Architecture In-Depth](https://developer.nvidia.com/blog/nvidia-hopper-architecture-in-depth/)，H100 SXM 的 SM、Tensor Core、L2 和片上存储规格。
+[^spec]: NVIDIA，[H100 产品规格](https://www.nvidia.com/en-eu/data-center/h100/)。规格表的星号注明 with sparsity，本文取约一半作为稠密 FP16/BF16 峰值。
+[^roofline]: NVIDIA，[AI Model Co-Design: Hardware-Friendly LLM Design](https://developer.nvidia.com/blog/ai-model-co-design-hardware-friendly-llm-design/)，算术强度与 compute-bound / memory-bound 的关系。文中 295 和时间比由上述规格自行计算。
+[^phases]: NVIDIA，[Mastering LLM Techniques: Inference Optimization](https://developer.nvidia.com/blog/mastering-llm-techniques-inference-optimization/)，prefill、decode 与 continuous batching。

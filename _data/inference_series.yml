@@ -1,5 +1,5 @@
-title: 大模型推理，快在哪里，慢在哪里
-subtitle: 从 QKV 到显存带宽，再到推理芯片与 KV Cache。
+title: 大模型从入坑到弃坑
+subtitle: 从 QKV 开始，顺手挖到显存、推理芯片和 KV Cache。
 url: /blogs/inference/
 chapters:
   - number: "01"

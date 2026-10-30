@@ -21,7 +21,7 @@ tags: [llm, inference, kv-cache, agent]
 
 回到系列第一篇的 QKV。在某一层里，新位置产生自己的 Q、K、V，用 Q 去读取前面位置的 K、V。前面那些位置的 K、V 如果已经算过，就把它们留下，下次直接用。
 
-这里说的是 **causal attention 下的自回归推理**，不是统计学里的 causal inference。对通常的因果 Transformer，在模型、位置编码和其他输入条件都不变时，一个位置的表示只依赖它及前面的 token，不依赖后面还没出现的 token。
+这里说的是 **causal attention 下的自回归推理**，不是统计学里的 causal inference。对通常的因果 Transformer，在模型、positional encoding 和其他输入条件都不变时，一个位置的表示只依赖它及前面的 token，不依赖后面还没出现的 token。
 
 因此，**前缀不变，对应的 KV 就能复用。** 更严谨地说，是同一模型配置和相同 token 前缀下，数学上对应的缓存可复用；服务端还得处理精度、缓存格式和路由等兼容条件。[^cache]
 

@@ -8,7 +8,7 @@ series_order: 1
 read_time: true
 read_time_minutes: 8
 extra_css: /assets/css/qkv.css
-excerpt: "从机器翻译的固定编码瓶颈，到按需读取、Key–Value 分工与 self-attention：沿着问题理解 QKV，而不是从公式开始背诵。"
+excerpt: "从机器翻译中固定长度 representation 的瓶颈，到按需读取、Key–Value 分工与 self-attention：沿着问题理解 QKV，而不是从公式开始背诵。"
 tags:
   - llm
   - attention
@@ -18,11 +18,11 @@ tags:
 
 <p class="qkv-intro">为什么每个 token 已经有一个向量，Attention 还要把它变成 Query、Key、Value 三份？答案藏在 Transformer 出现之前。</p>
 
-QKV 不是数学定理要求的唯一结构，而是围绕一个问题逐渐形成的设计：**怎样让神经网络根据当前需要，从一组信息里读出有用的内容？** 沿着机器翻译这条线，三个字母就不再显得突然。
+一言以概之，QKV 不是数学定理要求的唯一结构，而是围绕一个问题逐渐形成的设计：**怎样让神经网络根据当前需要，从一组信息里读出有用的内容？** 沿着机器翻译这条线，三个字母就不再显得突然。
 
-<h2 id="bottleneck">从“记住整句话”，到“随时回看原文”</h2>
+<h2 id="bottleneck">抛弃固定长度 representation</h2>
 
-早期一种典型的机器翻译方案是 encoder–decoder：encoder 用 RNN 或 LSTM 读完源句，把它压成固定维度的编码 $c$；decoder 以此为条件，逐词生成译文。2014 年的 Seq2Seq 是其中的重要代表。[\[1\]](#qkv-ref-1)
+早期一种典型的机器翻译方案是 encoder–decoder：encoder 用 RNN 或 LSTM 读完源句，把它压成固定维度的 representation $c$；decoder 以此为条件，逐词生成译文。2014 年的 Seq2Seq 是其中的重要代表。[\[1\]](#qkv-ref-1)
 
 这里逐词生成的是**译文**，不是逐词获得原文。普通整句翻译开始时，完整源句已经给定；后面的词也能帮助理解前面的词。下面要解决的，是怎样把这些已知信息交给 decoder。
 
@@ -30,7 +30,7 @@ QKV 不是数学定理要求的唯一结构，而是围绕一个问题逐渐形�
 
 <figure class="qkv-figure">
 {% include blog/qkv-bottleneck.svg %}
-<figcaption><span class="qkv-caption-label">图 1</span> 从共用一个句子编码，改成每一步按需读取。h₁、h₂、h₃ 是包含上下文的源位置表示，cₜ 是当前步骤读出的信息。</figcaption>
+<figcaption><span class="qkv-caption-label">图 1</span> 从共用一个句子 representation，改成每一步按需读取。h₁、h₂、h₃ 是包含上下文的源位置表示，cₜ 是当前步骤读出的信息。</figcaption>
 </figure>
 
 <h2 id="soft-alignment">Attention：每一步，重新决定读哪里</h2>
@@ -188,7 +188,7 @@ $x$ 是完整源句，$y_{<t}$ 才是受限的译文前缀。训练时虽然有�
 
 这里的 **causal attention** 指这种单向读取约束，与统计学里研究干预、因果效应的 **causal inference（因果推断）** 不同。逐词生成也是模型的选择，并非机器翻译任务本身要求所有模型都只能这样做。
 
-2017 年的 Transformer 把 self-attention 放到跨位置交互的中心，结合位置编码、前馈网络等组件构成完整架构。[\[6\]](#qkv-ref-6) 它不是 attention 的起点。QKV 也不是凭空冒出的三个矩阵：它们把“当前需要什么”“怎样匹配”“传递什么”变成了可以分别学习的功能。
+2017 年的 Transformer 把 self-attention 放到跨位置交互的中心，结合 positional encoding、前馈网络等组件构成完整架构。[\[6\]](#qkv-ref-6) 它不是 attention 的起点。QKV 也不是凭空冒出的三个矩阵：它们把“当前需要什么”“怎样匹配”“传递什么”变成了可以分别学习的功能。
 
 ## 参考文献
 

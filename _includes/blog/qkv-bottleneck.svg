@@ -1,11 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 470" role="img" aria-labelledby="qkv-bottleneck-title qkv-bottleneck-desc">
-  <title id="qkv-bottleneck-title">从固定句子编码，到按需读取原文</title>
-  <desc id="qkv-bottleneck-desc">上半图：源句经过编码器变成一个固定大小的向量 c，供所有解码步骤使用。下半图：保存每个源位置的表示，当前解码状态决定如何加权读取它们。</desc>
+  <title id="qkv-bottleneck-title">从固定长度 representation，到按需读取原文</title>
+  <desc id="qkv-bottleneck-desc">上半图：源句经过 encoder 变成一个固定大小的向量 c，供所有解码步骤使用。下半图：保存每个源位置的表示，当前解码状态决定如何加权读取它们。</desc>
   <defs><marker id="qkv-arrow-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z" fill="var(--muted)"/></marker></defs>
-  <text x="20" y="35" font-weight="600">固定编码：每一步读同一份摘要</text>
-  <rect class="node" x="20" y="65" width="175" height="65" rx="8"/>
-  <text x="107" y="106" text-anchor="middle">源句 → 编码器</text>
-  <path class="edge" d="M195 98 H245" marker-end="url(#qkv-arrow-a)"/>
+  <text x="20" y="35" font-weight="600">固定 representation：每一步读同一份摘要</text>
+  <rect class="node" x="20" y="65" width="195" height="65" rx="8"/>
+  <text x="117" y="106" text-anchor="middle">源句 → encoder</text>
+  <path class="edge" d="M215 98 H245" marker-end="url(#qkv-arrow-a)"/>
   <rect class="key-node" x="250" y="65" width="90" height="65" rx="8"/>
   <text x="295" y="106" text-anchor="middle">c</text>
   <path class="edge" d="M340 98 H400" marker-end="url(#qkv-arrow-a)"/>

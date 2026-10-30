@@ -1,11 +1,11 @@
 ---
 layout: archive
-title: "推理实战"
+title: "LLM 学习笔记"
 permalink: /blogs/inference/
 author_profile: true
 lang: zh-CN
 extra_css: /assets/css/inference-series.css
-excerpt: "五篇中文笔记：从 QKV、显存带宽，讲到 Cerebras、Groq，以及 KV Cache 和 Agent 的上下文管理。"
+excerpt: "我的大模型学习笔记，从 QKV 一路挖到显存、推理芯片和 API 账单。"
 ---
 
 {% include base_path %}
@@ -16,7 +16,7 @@ excerpt: "五篇中文笔记：从 QKV、显存带宽，讲到 Cerebras、Groq�
 <p>{{ site.data.inference_series.subtitle }}</p>
 </header>
 
-<p class="series-intro">模型的公式看懂了，为什么真跑起来还是慢？这个系列沿着数据走一遍：先看 Attention 怎么读信息，再算 GPU 搬参数的账，接着看两种推理芯片怎么换路走，最后回到每次 API 调用都碰得到的 KV Cache。可以从头读，也可以直接挑关心的一篇。</p>
+<p class="series-intro">最初只是想弄明白 QKV 怎么来的，结果一路挖到了显存、晶圆和 API 账单。坑越挖越大，先把目前想明白的记下来，免得过两个月又得从头查。还没弃坑，笔记先放这儿。</p>
 
 <ol class="series-chapters">
 {% for chapter in site.data.inference_series.chapters %}

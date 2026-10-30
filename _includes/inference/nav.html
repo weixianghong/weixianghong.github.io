@@ -1,5 +1,5 @@
 {% assign inference_series = site.data.inference_series %}
-<div class="series-breadcrumb"><a href="{{ base_path }}{{ inference_series.url }}">推理实战 · 系列目录</a><span>第 {{ page.series_order }} 篇 / 共 5 篇</span></div>
+<div class="series-breadcrumb"><a href="{{ base_path }}{{ inference_series.url }}">LLM 学习笔记 · 系列目录</a><span>第 {{ page.series_order }} 篇 / 共 5 篇</span></div>
 <details class="series-toc">
   <summary>本系列目录</summary>
   <ol>{% for chapter in inference_series.chapters %}<li><a href="{{ base_path }}{{ chapter.url }}"{% if chapter.url == page.url %} aria-current="page"{% endif %}>{{ chapter.title }}</a></li>{% endfor %}</ol>

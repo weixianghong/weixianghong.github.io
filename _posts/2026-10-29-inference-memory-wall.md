@@ -6,7 +6,7 @@ lang: zh-CN
 series: inference
 series_order: 2
 read_time: true
-read_time_minutes: 7
+read_time_minutes: 8
 excerpt: "拿 H100 和一个 8B 模型算一笔账：计算只要 0.016 毫秒，搬参数却要 4.8 毫秒。prefill、decode 和 batching 的区别，就在这里。"
 tags: [llm, inference, gpu]
 ---
@@ -25,6 +25,14 @@ H100 SXM 用的是 HBM3，但“显存就是 HBM”不太准确。消费级 GPU 
 {% include inference/gpu-memory.svg %}
 <figcaption>参数从 HBM 分块读进计算芯片。芯片里也有缓存和工作存储，但容不下整个大模型。示意图不按面积比例绘制。</figcaption>
 </figure>
+
+### 不是都得进芯片，才能算吗？
+
+对，真正参与运算的数据，总得先到达计算电路。这里说的“片上／片外”，特指相对于**计算裸片（compute die）**的位置，不是相对于整张显卡。HBM 本身也是芯片，可以和 GPU 计算裸片放在同一个封装里，但仍是不同的硅片。
+
+区别在于：**临时搬进来算，还是一直留在里面。** 比如一个 16 GB 的模型，GPU 逐层、分块读取权重；算到后面时，前面的大部分权重已经没有空间留在片内。下一轮生成又从前面的层开始，于是还得从 HBM 重新读。上一轮“进过芯片”，不代表下一轮需要时还在。
+
+后面讲 Cerebras、Groq 时，“参数放在片上 SRAM”指的是为权重安排足够的片上存储，让它们跨生成步骤持续驻留。整套模型可以分布在多颗芯片的 SRAM 里，不要求一颗装完。计算时仍要从 SRAM 读到计算单元，**省下的是反复跨片外接口的搬运，不是从此没有数据移动。**
 
 ## 拿一个 8B 模型算笔账
 

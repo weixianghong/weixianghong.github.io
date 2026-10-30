@@ -75,3 +75,15 @@ a:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outli
 /* The archive theme underlines every link by default; cards are full links. */
 .archive .series-feature a, .archive .series-feature a:hover,
 .archive a.series-chapter, .archive a.series-chapter:hover { text-decoration: none; }
+/* Series and standalone posts share the same chronological blog list. */
+.post-series-label { color: var(--accent); font-weight: 600; }
+.post-series-footer { position: relative; margin-top: .85rem; font-size: .78rem; }
+.post-series-index summary { width: max-content; cursor: pointer; color: var(--muted); line-height: 1.6; }
+.post-series-index ol { margin: .85rem 0 .2rem; padding-left: 1.45rem; border-top: 1px solid var(--border); padding-top: .75rem; }
+.post-series-index li { padding: .4rem 0 .4rem .2rem; line-height: 1.6; }
+.post-series-index li a { text-decoration: none; }
+.post-series-index li > span { color: var(--muted); font-size: .7rem; margin-left: .75rem; white-space: nowrap; }
+.archive .post-series-read { position: absolute; right: 0; top: 0; color: var(--accent); text-decoration: none; line-height: 1.6; }
+.series-heading { margin: .6rem 0 1rem; }
+.series-heading h2 { margin: .6rem 0 .7rem; font-size: clamp(1.5rem, 3vw, 1.9rem); line-height: 1.45; }
+.series-heading p { color: var(--muted); margin: 0; font-size: .9rem; line-height: 1.8; }

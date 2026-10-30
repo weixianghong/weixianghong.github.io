@@ -1,0 +1,4 @@
+# Register a series by the key used in post front matter.
+# data_key points to its shared title, URL and ordered chapters.
+inference:
+  data_key: inference_series

@@ -1,12 +1,12 @@
 ---
-title: "Cerebras：那就把参数放进芯片里"
+title: "Cerebras"
 date: 2026-10-29 09:01:00 -0700
 permalink: /blogs/inference-cerebras/
 lang: zh-CN
 series: inference
 series_order: 3
 read_time: true
-read_time_minutes: 6
+read_time_minutes: 7
 excerpt: "既然搬参数这么慢，为什么不直接把它们留在芯片里？Cerebras 把芯片做到晶圆那么大，但容量、通信和 KV Cache 的账还得继续算。"
 tags: [llm, inference, cerebras]
 ---
@@ -33,7 +33,17 @@ SRAM 的全名是 Static Random-Access Memory。“Static”不是说内容不�
 
 常规光刻不是把整个晶圆一次照出来，而是一块曝光场、一块曝光场地做。以 ASML 的一款 0.33 NA EUV 设备为例，最大曝光场是 **26 × 33 mm**。H100 的 GH100 计算裸片约 814 mm²，已经接近这个面积量级。[^reticle]
 
-这不是“超过这个尺寸物理上就不可能”，而是常规单曝光场芯片的制造边界。真想跨过去，需要专门解决跨曝光场连接、供电、散热和良率。
+### 那把光刻机做大，不就行了？
+
+原则上可以扩大曝光场，26 × 33 mm 不是一条永远不能突破的物理定律。但要扩大的不是机器外壳，而是**能保持足够精度的成像范围**。光刻机要把掩模图案投影到晶圆上，范围更大，还得让各处的分辨率、畸变和多层图案的对准精度都达标。
+
+这有点像投影仪：画面放大容易，放大以后每个角落还要一样清楚，就难了。一个例子是 High-NA EUV：为了提高分辨率，ASML 使用更大的反射镜，又得解决光线照到掩模的角度问题。最后采用两个方向不同的缩小倍率，兼容原有掩模，曝光场面积反而减半。[^optics]
+
+更大掩模的路线也有人在推进。ASML 和台积电在 2026 年 9 月宣布了相关计划，但要一起升级掩模制造、检测、搬运和曝光系统，时间表跨到了 2030 年代。[^large-mask] 而且，就算能曝光更大，巨型芯片仍要解决良率、长距离通信、供电和散热，不会自动变得划算。
+
+### 另一条路：把曝光区连起来
+
+不换成一台能一次照出整片芯片的机器，也可以通过专门设计，让多个曝光区连成一个处理器。
 
 Cerebras 就走了这条路。用很口语的话说：**别人做好以后切开，它让很多曝光区继续连在一起。** 在原本要分开的区域之间做跨 reticle 连接，形成一个约 21.5 cm 见方的巨型处理器。不是把买来的小芯片重新粘起来，而是在制造时就把它们连成整体。[^wafer]
 
@@ -97,3 +107,6 @@ AWS 与 Cerebras 已宣布合作：Trainium 做 prefill，算好 KV Cache，经 
 [^partners]: [AWS 与 Cerebras 合作公告，2026-03-13](https://press.aboutamazon.com/aws/2026/3/aws-and-cerebras-collaboration-aims-to-set-a-new-standard-for-ai-inference-speed-and-performance-in-the-cloud)；[AMD 合作公告，2026-07-23](https://ir.amd.com/news-events/press-releases/detail/1293/amd-and-cerebras-announce-industry-leading-ultra-low-latency-and-high-throughput-ai-inference-solution)。
 [^rollout]: Cerebras，[2026 年第二季度业务更新，2026-08-12](https://investors.cerebras.ai/news-releases/news-release-details/cerebras-systems-fast-inference-cloud-business-nearly-quadruples)。
 [^cs4]: Cerebras，[CS-4 发布，2026-08-18](https://investors.cerebras.ai/news-releases/news-release-details/cerebras-unveils-cs-4-30-times-faster-gpu-based-solutions)。
+
+[^optics]: ASML，[5 Things You Should Know About High NA EUV](https://www.asml.com/en/company/stories/2024/5-things-high-na-euv)，成像光学系统、掩模与曝光场之间的取舍。
+[^large-mask]: ASML 与台积电，[大尺寸 High-NA EUV 掩模计划，2026-09-08](https://investor.asml.com/news-releases/news-release-details/asml-and-tsmc-announce-initiative-pioneer-industry-transition-large-format-photomasks-high-na-euv)。

@@ -10,18 +10,23 @@ author_profile: true
 
 {% include base_path %}
 
-{% include inference/feature.html %}
-
-<h2 class="group-title">更多文章</h2>
-
-{% capture written_year %}'None'{% endcapture %}
+{% assign written_year = '' %}
+{% assign listed_series_keys = '' %}
 {% for post in site.posts %}
-{% unless post.series == "inference" %}
-{% capture year %}{{ post.date | date: '%Y' }}{% endcapture %}
+{% assign series_definition = site.data.blog_series[post.series] %}
+{% if series_definition %}
+  {% assign series_key = post.series | prepend: '|' | append: '|' %}
+  {% if listed_series_keys contains series_key %}{% continue %}{% endif %}
+  {% assign listed_series_keys = listed_series_keys | append: series_key %}
+{% endif %}
+{% assign year = post.date | date: '%Y' %}
 {% if year != written_year %}
 <h2 class="group-title">{{ year }}</h2>
-{% capture written_year %}{{ year }}{% endcapture %}
+{% assign written_year = year %}
 {% endif %}
+{% if series_definition %}
+  {% include blog-series-card.html definition=series_definition date=post.date %}
+{% else %}
 <div class="post-card">
 <h2 class="post-card__title"><a href="{{ base_path }}{{ post.url }}">{{ post.title }}</a></h2>
 <p class="post-card__meta">
@@ -36,5 +41,5 @@ author_profile: true
 <p class="post-card__excerpt">{{ post.excerpt | strip_html | truncate: 250 }}</p>
 {% endif %}
 </div>
-{% endunless %}
+{% endif %}
 {% endfor %}

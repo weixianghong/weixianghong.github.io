@@ -10,7 +10,11 @@ excerpt: "五篇中文笔记：从 QKV、显存带宽，讲到 Cerebras、Groq�
 
 {% include base_path %}
 
-{% include inference/feature.html %}
+<header class="series-heading">
+<span class="series-kicker">5 篇中文笔记 · 每篇约 6–8 分钟</span>
+<h2>{{ site.data.inference_series.title }}</h2>
+<p>{{ site.data.inference_series.subtitle }}</p>
+</header>
 
 <p class="series-intro">模型的公式看懂了，为什么真跑起来还是慢？这个系列沿着数据走一遍：先看 Attention 怎么读信息，再算 GPU 搬参数的账，接着看两种推理芯片怎么换路走，最后回到每次 API 调用都碰得到的 KV Cache。可以从头读，也可以直接挑关心的一篇。</p>
 

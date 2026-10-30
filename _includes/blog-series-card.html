@@ -1,0 +1,13 @@
+{% assign listed_series = site.data[include.definition.data_key] %}
+<div class="post-card post-card--series">
+  <h2 class="post-card__title"><a href="{{ base_path }}{{ listed_series.url }}">{{ listed_series.title }}</a></h2>
+  <p class="post-card__meta">{{ include.date | date: "%B %d, %Y" }} &middot; <span class="post-series-label">系列</span> &middot; {{ listed_series.chapters.size }} 篇</p>
+  <p class="post-card__excerpt">{{ listed_series.subtitle }}</p>
+  <div class="post-series-footer">
+    <details class="post-series-index">
+      <summary>查看目录</summary>
+      <ol>{% for chapter in listed_series.chapters %}<li><a href="{{ base_path }}{{ chapter.url }}">{{ chapter.title }}</a><span>{{ chapter.minutes }} 分钟</span></li>{% endfor %}</ol>
+    </details>
+    <a class="post-series-read" href="{{ base_path }}{{ listed_series.url }}">阅读系列 <span aria-hidden="true">→</span></a>
+  </div>
+</div>

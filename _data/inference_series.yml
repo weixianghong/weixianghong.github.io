@@ -13,15 +13,15 @@ chapters:
     subtitle: 算一遍 H100 的账，看懂 prefill、decode 和 batching。
     topic: GPU · HBM
     url: /blogs/inference-memory-wall/
-    minutes: 7
+    minutes: 8
   - number: "03"
-    title: Cerebras：那就把参数放进芯片里
+    title: Cerebras
     subtitle: 把芯片做到晶圆那么大，解决什么，又要付出什么？
     topic: Wafer-scale
     url: /blogs/inference-cerebras/
-    minutes: 6
+    minutes: 7
   - number: "04"
-    title: Groq：几百颗芯片，能不能像一颗那样跑？
+    title: Groq
     subtitle: SRAM、静态调度，以及它为什么会和 GPU 搭在一起。
     topic: Static scheduling
     url: /blogs/inference-groq/

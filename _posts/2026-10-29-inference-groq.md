@@ -1,5 +1,5 @@
 ---
-title: "Groq：几百颗芯片，能不能像一颗那样跑？"
+title: "Groq"
 date: 2026-10-29 09:02:00 -0700
 permalink: /blogs/inference-groq/
 lang: zh-CN

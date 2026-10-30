@@ -6,7 +6,7 @@ lang: zh-CN
 series: inference
 series_order: 1
 read_time: true
-read_time_minutes: 8
+read_time_minutes: 5
 extra_css: /assets/css/qkv.css
 excerpt: "从机器翻译中固定长度 representation 的瓶颈，到按需读取、Key–Value 分工与 self-attention：沿着问题理解 QKV，而不是从公式开始背诵。"
 tags:
@@ -22,11 +22,11 @@ tags:
 
 <h2 id="bottleneck">摒弃固定长度 representation</h2>
 
-早期一种典型的机器翻译方案是 encoder–decoder：encoder 用 RNN 或 LSTM 读完源句，把它压成固定维度的 representation $c$；decoder 以此为条件，逐词生成译文。2014 年的 Seq2Seq 是其中的重要代表。[\[1\]](#qkv-ref-1)
+早期一种典型的机器翻译方案是 encoder–decoder：encoder 用 RNN 或 LSTM 读完源句，把它压成固定维度的 representation $c$；decoder 以此为条件，逐词生成译文。2014 年的 Seq2Seq 是这种方式的代表作。[\[1\]](#qkv-ref-1)
 
-注意与 ChatGPT 区分，这里逐词生成的是**译文**，不是逐词获得原文。翻译开始时，完整源句已经给定，翻译过程可以 access 所有源句的词。问题的关键是，decoder 如何去利用这些信息。
+这里注意与 ChatGPT 区分，机器翻译里，逐词生成的是**译文**，不是逐词获得原文。翻译开始时，完整源句已经给定，翻译过程可以 access 所有源句的词。问题的关键在于，decoder 如何去利用这些信息。
 
-在老派的机器翻译，比如 Seq2Seq，它们的工作方式像是读完原文后把原文收起来，只带着一张固定大小的笔记完成翻译。句子越长，细节自然越难保留。那么，一个自然的改进就是：**把原文每个位置的表示都留下，让 decoder 需要时回头读取。**
+在老派的机器翻译中，比如 Seq2Seq，它们的工作方式像是读完原文后把原文收起来，只带着一张固定大小的笔记完成翻译。句子越长，细节自然越难保留。那么，一个自然的改进就是：**把原文每个位置的表示都留下，让 decoder 需要时回头读取。**
 
 <figure class="qkv-figure">
 {% include blog/qkv-bottleneck.svg %}
@@ -68,7 +68,7 @@ decoder 用它来帮助预测目标词。下一步状态变了，读取重点也
 
 <h2 id="key-value">Q、K、V 是怎么来的</h2>
 
-在刚才的过程中，其实三个角色已经出现了：
+在刚才的过程中，其实这三兄弟已经出现了：
 
 <div class="qkv-article-table" role="region" aria-label="早期 attention 与 QKV 的对应" tabindex="0" markdown="1">
 

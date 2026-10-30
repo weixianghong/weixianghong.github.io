@@ -1,5 +1,5 @@
 ---
-title: "Q、K、V 从何而来：Attention 的演化与直觉"
+title: "Q、K、V 是怎么来的"
 date: 2026-10-28
 permalink: /blogs/where-qkv-comes-from/
 lang: zh-CN

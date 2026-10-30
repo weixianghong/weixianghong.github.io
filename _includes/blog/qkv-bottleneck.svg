@@ -11,7 +11,7 @@
   <path class="edge" d="M340 98 H400" marker-end="url(#qkv-arrow-a)"/>
   <rect class="node" x="405" y="65" width="175" height="65" rx="8"/>
   <text x="492" y="106" text-anchor="middle">生成译文</text>
-  <text class="qkv-muted" x="295" y="170" text-anchor="middle">全部源句信息经过固定大小的 c</text>
+  <text class="qkv-muted" x="300" y="158" text-anchor="middle"><tspan x="300">全部源句信息压缩为固定大小的 </tspan><tspan x="300" dy="30">representation c</tspan></text>
   <path class="edge" d="M20 205 H580"/>
   <text x="20" y="250" font-weight="600">Attention：每一步重新决定读哪里</text>
   <rect class="node" x="20" y="280" width="160" height="65" rx="8"/>

@@ -1,5 +1,7 @@
 title: 大模型从入坑到弃坑
-subtitle: 从 QKV 开始，顺手挖到显存、推理芯片和 KV Cache。
+subtitle: |-
+  学到哪里 写到哪里
+  未完待续 敬请指教
 url: /blogs/inference/
 chapters:
   - number: "01"

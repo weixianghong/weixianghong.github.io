@@ -10,8 +10,6 @@ author_profile: true
 
 {% include base_path %}
 
-<p class="series-intro">边学边记，主要是怕自己过两个月又忘了。能顺便帮到谁，就更好了。</p>
-
 {% assign written_year = '' %}
 {% assign listed_series_keys = '' %}
 {% for post in site.posts %}

@@ -1,5 +1,5 @@
 ---
-title: "GPU 很快，为什么还要等显存？"
+title: "GPU 和 HBM"
 date: 2026-10-29 09:00:00 -0700
 permalink: /blogs/inference-memory-wall/
 lang: zh-CN

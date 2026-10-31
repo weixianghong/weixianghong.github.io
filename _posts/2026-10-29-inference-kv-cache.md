@@ -1,5 +1,5 @@
 ---
-title: "KV Cache：算过的，为什么还要再算？"
+title: "KV Cache"
 date: 2026-10-29 09:03:00 -0700
 permalink: /blogs/inference-kv-cache/
 lang: zh-CN

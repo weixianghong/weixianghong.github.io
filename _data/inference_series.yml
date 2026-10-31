@@ -4,31 +4,31 @@ url: /blogs/inference/
 chapters:
   - number: "01"
     title: Q、K、V 从何而来
-    subtitle: 从老派机器翻译，走到 Attention 与 Transformer。
+    subtitle: 从传统机器翻译到 Attention
     topic: Attention
     url: /blogs/where-qkv-comes-from/
     minutes: 8
   - number: "02"
-    title: GPU 很快，为什么还要等显存？
-    subtitle: 算一遍 H100 的账，看懂 prefill、decode 和 batching。
+    title: GPU 和 HBM
+    subtitle: prefill、decode 和 batching
     topic: GPU · HBM
     url: /blogs/inference-memory-wall/
     minutes: 8
   - number: "03"
     title: Cerebras
-    subtitle: 把芯片做到晶圆那么大，解决什么，又要付出什么？
+    subtitle: 把芯片做到晶圆那么大
     topic: Wafer-scale
     url: /blogs/inference-cerebras/
     minutes: 7
   - number: "04"
     title: Groq
-    subtitle: SRAM、静态调度，以及它为什么会和 GPU 搭在一起。
+    subtitle: and how it coupled with GPU
     topic: Static scheduling
     url: /blogs/inference-groq/
     minutes: 6
   - number: "05"
-    title: KV Cache：算过的，为什么还要再算？
-    subtitle: 从一份越来越大的缓存，讲到 Agent 的上下文管理。
+    title: KV Cache
+    subtitle: Context Engineering & Harness Engineering
     topic: KV Cache · Agent
     url: /blogs/inference-kv-cache/
     minutes: 8

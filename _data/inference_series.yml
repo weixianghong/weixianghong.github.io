@@ -2,7 +2,7 @@ title: 大模型从入坑到弃坑
 subtitle: |-
   学到哪里 写到哪里
   未完待续 敬请指教
-url: /blogs/inference/
+url: /blogs/llm/
 chapters:
   - number: "01"
     title: Q、K、V 从何而来

@@ -1,7 +1,7 @@
 ---
 layout: archive
 title: "LLM 学习笔记"
-permalink: /blogs/inference/
+permalink: /blogs/llm/
 author_profile: true
 lang: zh-CN
 extra_css: /assets/css/inference-series.css

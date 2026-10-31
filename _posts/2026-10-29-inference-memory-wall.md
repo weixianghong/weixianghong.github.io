@@ -94,15 +94,13 @@ decode 就不一样了。普通自回归生成中，下一个 token 是什么，
 
 ## Batching
 
-大模型 inference service 会把很多人的请求放到一起算，叫 batching。每个人仍然只生成自己的下一个 token，但这一步，几十上百个人可以共享一次权重读取。实际服务还常用 continuous batching：有人结束就退出，有新请求就补进来。vLLM 的两大创新，[^phases]
+大模型 inference service 会把很多人的请求放到一起算，叫 batching。每个人仍然只生成自己的下一个 token，但这一步，几十上百个人可以共享一次权重读取。实际服务还常用 continuous batching：有人结束就退出，有新请求就补进来。vLLM 的两大创新，一是 PagedAttention，二就是 continuous batching。[^phases]
 
 这样一块卡能服务更多人，整体吞吐量更高。
 
 读到这里，下一步的问题就很自然了：既然往返 HBM 这么费事，能不能干脆把模型一直放在计算芯片里面？下面两篇文章，我们就探索这个问题。
 
-## 资料与计算口径
-
-本文的算例使用十进制 GB/TB、16-bit 稠密权重和稠密 Tensor Core 峰值，仅估算主要权重乘加与理想权重读取；不适用于直接估算 MoE 的全部权重流量。规格核对于 2026-10-29。
+## Reference
 
 [^hbm]: [Micron：HBM 的堆叠、接口与带宽](https://www.micron.com/products/memory/hbm)；[TrendForce：三家主要 HBM 供应商](https://www.trendforce.com/presscenter/news/20260213-12929.html)。
 [^hopper]: NVIDIA，[Hopper Architecture In-Depth](https://developer.nvidia.com/blog/nvidia-hopper-architecture-in-depth/)，H100 SXM 的 SM、Tensor Core、L2 和片上存储规格。

@@ -6,7 +6,7 @@ lang: zh-CN
 series: inference
 series_order: 4
 read_time: true
-read_time_minutes: 6
+read_time_minutes: 4
 excerpt: "芯片不做大，做很多颗，再让编译器提前排好计算和通信。Groq 的静态调度解决了什么，NVIDIA 为什么又把它和 GPU 拼起来？"
 tags: [llm, inference, groq]
 ---

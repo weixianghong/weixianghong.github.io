@@ -4,6 +4,7 @@ date: 2026-03-25
 redirect_from:
   - /from-llm-to-agent-engineering/
 read_time: true
+read_time_minutes: 16
 excerpt: "Walking from a raw LLM to a full agent system — RAG, tool use, MCP, skills, and the harness — as a series of engineering problems and the solutions that emerged to solve them."
 tags:
   - llm

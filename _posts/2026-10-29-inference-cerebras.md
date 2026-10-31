@@ -6,7 +6,7 @@ lang: zh-CN
 series: inference
 series_order: 3
 read_time: true
-read_time_minutes: 7
+read_time_minutes: 4
 excerpt: "既然搬参数这么慢，为什么不直接把它们留在芯片里？Cerebras 把芯片做到晶圆那么大，但容量、通信和 KV Cache 的账还得继续算。"
 tags: [llm, inference, cerebras]
 ---

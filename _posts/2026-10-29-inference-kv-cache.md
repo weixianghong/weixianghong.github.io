@@ -6,7 +6,7 @@ lang: zh-CN
 series: inference
 series_order: 5
 read_time: true
-read_time_minutes: 8
+read_time_minutes: 5
 excerpt: "同样一百万输入 token，缓存命中和未命中的价格可以差 50 倍。从 KV Cache 怎么复用、为什么占显存，一直讲到 Agent 怎么管理上下文。"
 tags: [llm, inference, kv-cache, agent]
 ---

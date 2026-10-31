@@ -6,6 +6,7 @@ redirect_from:
   - /build-max-heap-vs-heap-sort/
 author_profile: true
 read_time: true
+read_time_minutes: 8
 excerpt: "两个过程都在反复调用 O(log n) 的 Max-Heapify，为什么建堆是 O(n)，堆排序却仍然是 O(n log n)？关键不在单次最坏复杂度，而在昂贵操作如何分布。"
 tags:
   - algorithms

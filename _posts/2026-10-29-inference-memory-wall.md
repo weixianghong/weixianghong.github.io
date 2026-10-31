@@ -6,7 +6,7 @@ lang: zh-CN
 series: inference
 series_order: 2
 read_time: true
-read_time_minutes: 8
+read_time_minutes: 5
 excerpt: "拿 H100 和一个 8B 模型算一笔账：计算只要 0.016 毫秒，搬参数却要 4.8 毫秒。prefill、decode 和 batching 的区别，就在这里。"
 tags: [llm, inference, gpu]
 ---

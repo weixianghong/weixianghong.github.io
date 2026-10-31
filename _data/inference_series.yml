@@ -9,28 +9,23 @@ chapters:
     subtitle: 从传统机器翻译到 Attention
     topic: Attention
     url: /blogs/where-qkv-comes-from/
-    minutes: 8
   - number: "02"
     title: GPU 和 HBM
     subtitle: prefill、decode 和 batching
     topic: GPU · HBM
     url: /blogs/inference-memory-wall/
-    minutes: 8
   - number: "03"
     title: Cerebras
     subtitle: 把芯片做到晶圆那么大
     topic: Wafer-scale
     url: /blogs/inference-cerebras/
-    minutes: 7
   - number: "04"
     title: Groq
     subtitle: and how it coupled with GPU
     topic: Static scheduling
     url: /blogs/inference-groq/
-    minutes: 6
   - number: "05"
     title: KV Cache
     subtitle: Context Engineering & Harness Engineering
     topic: KV Cache · Agent
     url: /blogs/inference-kv-cache/
-    minutes: 8

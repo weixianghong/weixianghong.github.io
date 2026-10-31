@@ -6,6 +6,7 @@ redirect_from:
   - /signals-to-ad-auctions/
 author_profile: true
 read_time: true
+read_time_minutes: 11
 excerpt: "A practical mental model for how signals become targeting decisions, auction scores, budget allocation, and conversion measurement."
 tags:
   - ads

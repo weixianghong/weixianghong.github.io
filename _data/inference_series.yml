@@ -1,0 +1,31 @@
+title: 大模型从入坑到弃坑
+subtitle: |-
+  学到哪里 写到哪里
+  未完待续 敬请指教
+url: /blogs/llm/
+chapters:
+  - number: "01"
+    title: Q、K、V 从何而来
+    subtitle: 从传统机器翻译到 Attention
+    topic: Attention
+    url: /blogs/where-qkv-comes-from/
+  - number: "02"
+    title: GPU 和 HBM
+    subtitle: prefill、decode 和 batching
+    topic: GPU · HBM
+    url: /blogs/inference-memory-wall/
+  - number: "03"
+    title: Cerebras
+    subtitle: 把芯片做到晶圆那么大
+    topic: Wafer-scale
+    url: /blogs/inference-cerebras/
+  - number: "04"
+    title: Groq
+    subtitle: and how it coupled with GPU
+    topic: Static scheduling
+    url: /blogs/inference-groq/
+  - number: "05"
+    title: KV Cache
+    subtitle: Context Engineering & Harness Engineering
+    topic: KV Cache · Agent
+    url: /blogs/inference-kv-cache/

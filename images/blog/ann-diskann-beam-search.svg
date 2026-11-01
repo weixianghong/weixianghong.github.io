@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="700" viewBox="0 0 1000 700">
+<rect width="100%" height="100%" fill="white"/>
+<text x="500.0" y="48" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="29" font-weight="700" fill="#333333">一轮 beam search：一次 IO 往返展开 W 个节点</text>
+<rect x="46" y="84" width="214" height="372" rx="16" fill="#F1F3F5" stroke="#546E7A" stroke-width="3"/>
+<text x="153" y="120" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="19" font-weight="700" fill="#546E7A">候选池 C</text>
+<text x="153" y="144" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#8A9199">内存，按 PQ 距离排序</text>
+<rect x="72" y="168" width="176" height="34" rx="8" fill="#FFF3E0" stroke="#E65100" stroke-width="2.5"/>
+<text x="153" y="191" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#E65100">节点 #1004    d̂ = 11</text>
+<rect x="72" y="212" width="176" height="34" rx="8" fill="#FFF3E0" stroke="#E65100" stroke-width="2.5"/>
+<text x="153" y="235" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#E65100">节点 #1011    d̂ = 14</text>
+<rect x="72" y="256" width="176" height="34" rx="8" fill="#FFF3E0" stroke="#E65100" stroke-width="2.5"/>
+<text x="153" y="279" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#E65100">节点 #1018    d̂ = 16</text>
+<rect x="72" y="300" width="176" height="34" rx="8" fill="#FFF3E0" stroke="#E65100" stroke-width="2.5"/>
+<text x="153" y="323" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#E65100">节点 #1025    d̂ = 19</text>
+<rect x="72" y="344" width="176" height="34" rx="8" fill="#FFFFFF" stroke="#C3CBD1" stroke-width="2.5"/>
+<text x="153" y="367" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="13.5" font-weight="400" fill="#8A9199">节点 #1032    d̂ = 24</text>
+<rect x="72" y="388" width="176" height="34" rx="8" fill="#FFFFFF" stroke="#C3CBD1" stroke-width="2.5"/>
+<text x="153" y="411" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="13.5" font-weight="400" fill="#8A9199">节点 #1039    d̂ = 31</text>
+<text x="153" y="442" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#8A9199">容量 L</text>
+<line x1="268" y1="236" x2="313.2" y2="236.0" stroke="#E65100" stroke-width="3.5"/>
+<polygon points="322.0,236.0 312.4,241.3 312.4,230.7" fill="#E65100"/>
+<text x="296" y="218" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="700" fill="#E65100">取最近的</text>
+<text x="296" y="258" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="700" fill="#E65100">W = 4 个</text>
+<rect x="330" y="118" width="236" height="236" rx="16" fill="#FFF3E0" stroke="#E65100" stroke-width="3"/>
+<text x="448" y="154" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="17" font-weight="700" fill="#E65100">并发 4 次 4 KB 读</text>
+<rect x="356" y="176" width="184" height="32" rx="8" fill="#FFFFFF" stroke="#EBA26A" stroke-width="2"/>
+<text x="448" y="198" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="13.5" font-weight="400" fill="#666666">SSD 扇区读</text>
+<rect x="356" y="218" width="184" height="32" rx="8" fill="#FFFFFF" stroke="#EBA26A" stroke-width="2"/>
+<text x="448" y="240" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="13.5" font-weight="400" fill="#666666">SSD 扇区读</text>
+<rect x="356" y="260" width="184" height="32" rx="8" fill="#FFFFFF" stroke="#EBA26A" stroke-width="2"/>
+<text x="448" y="282" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="13.5" font-weight="400" fill="#666666">SSD 扇区读</text>
+<rect x="356" y="302" width="184" height="32" rx="8" fill="#FFFFFF" stroke="#EBA26A" stroke-width="2"/>
+<text x="448" y="324" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="13.5" font-weight="400" fill="#666666">SSD 扇区读</text>
+<text x="448" y="378" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#333333">一次 IO 往返 ≈ 100 μs</text>
+<text x="448" y="402" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="13" font-weight="400" fill="#8A9199">4 个节点摊薄同一次延迟</text>
+<line x1="574" y1="236" x2="619.2" y2="236.0" stroke="#6B6B6B" stroke-width="3.5"/>
+<polygon points="628.0,236.0 618.4,241.3 618.4,230.7" fill="#6B6B6B"/>
+<rect x="636" y="100" width="318" height="130" rx="16" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/>
+<text x="795" y="134" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="16.5" font-weight="700" fill="#2E7D32">① 精确向量 → 精确距离</text>
+<text x="795" y="162" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#666666">存入 Exact 集合</text>
+<text x="795" y="190" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="13.5" font-weight="400" fill="#8A9199">最终 top-k 只从这里按精确距离选</text>
+<text x="795" y="214" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="13.5" font-weight="700" fill="#2E7D32">PQ 误差进不了最终排序</text>
+<rect x="636" y="250" width="318" height="150" rx="16" fill="#E6F2FF" stroke="#1565C0" stroke-width="3"/>
+<text x="795" y="284" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="16.5" font-weight="700" fill="#1565C0">② 64 个邻居 → 查内存 PQ 码</text>
+<text x="795" y="312" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#666666">算出近似距离，回填候选池 C</text>
+<rect x="700" y="330" width="190" height="44" rx="10" fill="#FFFFFF" stroke="#9CC3EA" stroke-width="2.5"/>
+<text x="795" y="359" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="20" font-weight="700" fill="#1565C0">零磁盘 IO</text>
+<path d="M795,400 C795,470 700,486 500,486 C300,486 180,472 153,462" fill="none" stroke="#1565C0" stroke-width="3" stroke-dasharray="9,7"/>
+<polygon points="153.0,462.0 162.9,460.5 159.5,469.6" fill="#1565C0"/>
+<text x="500" y="508" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="14" font-weight="700" fill="#1565C0">回填后重排候选池，进入下一轮</text>
+<rect x="46" y="534" width="908" height="74" rx="16" fill="#FBFCFD" stroke="#DDE2E6" stroke-width="2"/>
+<text x="500" y="566" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#C62828">若没有内存里的 PQ 码：展开一个节点 = 读 64 个邻居的向量 = 64 次磁盘读</text>
+<text x="500" y="592" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="15" font-weight="400" fill="#666666">有了它：磁盘读次数 = 展开的节点数，而不是 节点数 × 64</text>
+<rect x="46" y="622" width="908" height="56" rx="14" fill="#FFF3E0" stroke="#E65100" stroke-width="3"/>
+<text x="500" y="656" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="17" font-weight="700" fill="#E65100">延迟账：展开约 200 个节点 ÷ W = 4  →  50 轮 IO 往返 × 100 μs  ≈  5 ms</text>
+</svg>

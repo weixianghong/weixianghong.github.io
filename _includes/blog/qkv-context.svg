@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 530" role="img" aria-labelledby="qkv-context-title qkv-context-desc">
+  <title id="qkv-context-title">翻译与自回归 LLM：已知输入和未知输出</title>
+  <desc id="qkv-context-desc">翻译 decoder 同时读取完整原文的 encoder 表示和已知译文前缀，预测下一个译文 token。典型自回归 LLM 把完整提示词和已生成回答作为同一个前缀，预测下一个 token。两者都不读取尚未生成的输出。</desc>
+  <defs><marker id="qkv-arrow-context" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="var(--muted)"/></marker></defs>
+  <text x="20" y="35" font-weight="600">翻译：完整原文 + 逐步生成的译文</text>
+  <rect class="key-node" x="20" y="65" width="250" height="85" rx="8"/>
+  <text x="145" y="100" text-anchor="middle">完整原文 x</text>
+  <text class="qkv-muted" x="145" y="133" text-anchor="middle">经 encoder 编码</text>
+  <rect class="node" x="330" y="65" width="250" height="85" rx="8"/>
+  <text x="455" y="117" text-anchor="middle">已知译文 y&lt;t</text>
+  <path class="edge" d="M145 150 L250 190 M455 150 L350 190" marker-end="url(#qkv-arrow-context)"/>
+  <rect class="key-node" x="180" y="200" width="240" height="60" rx="8"/>
+  <text x="300" y="238" text-anchor="middle">Decoder → 预测 yₜ</text>
+  <path class="edge" d="M20 295 H580"/>
+  <text x="20" y="340" font-weight="600">典型 LLM：一个持续延长的序列</text>
+  <rect class="node" x="40" y="370" width="520" height="60" rx="8"/>
+  <text x="300" y="408" text-anchor="middle">完整提示词 + 已生成回答</text>
+  <path class="edge" d="M300 430 V455" marker-end="url(#qkv-arrow-context)"/>
+  <rect class="key-node" x="90" y="465" width="420" height="55" rx="8"/>
+  <text x="300" y="501" text-anchor="middle">Decoder-only → 下一个 token</text>
+</svg>

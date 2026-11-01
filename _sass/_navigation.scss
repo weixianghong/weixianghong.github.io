@@ -189,7 +189,7 @@
     }
   }
 
-  button {
+  button:not(.dark-mode-toggle) {
     position: absolute;
     height: 100%;
     right: 0;

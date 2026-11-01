@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="680" viewBox="0 0 1000 680">
+<defs>
+  <marker id="arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" fill="#6B6B6B"/>
+  </marker>
+  <style>
+    .title { font: 700 30px Arial, Helvetica, sans-serif; fill: #333333; }
+    .h1 { font: 700 23px Arial, Helvetica, sans-serif; }
+    .h2 { font: 700 18px Arial, Helvetica, sans-serif; }
+    .body { font: 400 15px Arial, Helvetica, sans-serif; fill: #666666; }
+    .small { font: 400 13px Arial, Helvetica, sans-serif; fill: #666666; }
+    .formula { font: 700 19px Arial, Helvetica, sans-serif; fill: #333333; }
+    .caption { font: 700 16px Arial, Helvetica, sans-serif; fill: #333333; }
+  </style>
+</defs>
+<rect width="100%" height="100%" fill="white"/>
+<text x="500" y="48" text-anchor="middle" class="title">Long-Funnel Advertising: The Conversion May Happen Offline</text>
+<rect x="25" y="125" width="170" height="100" rx="16" fill="#E6F2FF" stroke="#1565C0" stroke-width="3"/>
+<text x="110" y="180" text-anchor="middle" class="h2" fill="#1565C0">Impression</text>
+<line x1="195" y1="175" x2="220" y2="175" stroke="#6B6B6B" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="220" y="125" width="170" height="100" rx="16" fill="#F3E5F5" stroke="#7B1FA2" stroke-width="3"/>
+<text x="305" y="180" text-anchor="middle" class="h2" fill="#7B1FA2">Lead</text>
+<line x1="390" y1="175" x2="415" y2="175" stroke="#6B6B6B" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="415" y="125" width="170" height="100" rx="16" fill="#E8F5E9" stroke="#2E7D32" stroke-width="3"/>
+<text x="500" y="180" text-anchor="middle" class="h2" fill="#2E7D32">Qualified Lead</text>
+<line x1="585" y1="175" x2="610" y2="175" stroke="#6B6B6B" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="610" y="125" width="170" height="100" rx="16" fill="#FFF3E0" stroke="#E65100" stroke-width="3"/>
+<text x="695" y="180" text-anchor="middle" class="h2" fill="#E65100">Appointment</text>
+<line x1="780" y1="175" x2="805" y2="175" stroke="#6B6B6B" stroke-width="3" marker-end="url(#arrow)"/>
+<rect x="805" y="125" width="170" height="100" rx="16" fill="#FDEBEC" stroke="#C62828" stroke-width="3"/>
+<text x="890" y="180" text-anchor="middle" class="h2" fill="#C62828">Purchase</text>
+<text x="110" y="270" text-anchor="middle" class="small">Dense, fast signal</text>
+<text x="890" y="270" text-anchor="middle" class="small">Sparse, delayed signal</text>
+<rect x="170" y="340" width="300" height="135" rx="16" fill="#F1F3F5" stroke="#546E7A" stroke-width="3"/>
+<text x="320.0" y="382" text-anchor="middle" class="h1" fill="#546E7A">CRM / Offline Events</text>
+<text x="320.0" y="418" text-anchor="middle" class="body">Lead stage updates</text>
+<text x="320.0" y="440" text-anchor="middle" class="body">Test drives or property tours</text>
+<text x="320.0" y="462" text-anchor="middle" class="body">Closed sales and values</text>
+<rect x="530" y="340" width="300" height="135" rx="16" fill="#E0F2F1" stroke="#00796B" stroke-width="3"/>
+<text x="680.0" y="382" text-anchor="middle" class="h1" fill="#00796B">Model Training</text>
+<text x="680.0" y="418" text-anchor="middle" class="body">Choose the deepest reliable label</text>
+<text x="680.0" y="440" text-anchor="middle" class="body">Use upper-funnel events for support</text>
+<text x="680.0" y="462" text-anchor="middle" class="body">Account for delayed feedback</text>
+<path d="M305,225 C305,290 320,295 320,340" fill="none" stroke="#6B6B6B" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M500,225 C500,290 320,295 320,340" fill="none" stroke="#6B6B6B" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M695,225 C695,290 320,295 320,340" fill="none" stroke="#6B6B6B" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M890,225 C890,290 320,295 320,340" fill="none" stroke="#6B6B6B" stroke-width="3" marker-end="url(#arrow)"/>
+<line x1="470" y1="408" x2="530" y2="408" stroke="#6B6B6B" stroke-width="3" marker-end="url(#arrow)"/>
+<path d="M680,475 C680,575 500,600 330,540 C250,512 170,470 110,225" fill="none" stroke="#6B6B6B" stroke-width="3" marker-end="url(#arrow)"/>
+<text x="500" y="640" text-anchor="middle" class="caption">Better downstream feedback moves optimization closer to real business value</text>
+</svg>

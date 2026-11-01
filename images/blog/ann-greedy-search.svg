@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="600" viewBox="0 0 1000 600">
+<rect width="100%" height="100%" fill="white"/>
+<text x="500.0" y="48" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="29" font-weight="700" fill="#333333">贪心最好优先搜索：所有图索引共用的同一个检索算法</text>
+<rect x="45" y="84" width="565" height="430" rx="16" fill="#FBFCFD" stroke="#DDE2E6" stroke-width="2"/>
+<line x1="112" y1="176" x2="196" y2="132" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="112" y1="176" x2="172" y2="258" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="112" y1="176" x2="122" y2="292" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="112" y1="176" x2="196" y2="190" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="196" y1="132" x2="258" y2="208" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="196" y1="132" x2="300" y2="138" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="196" y1="132" x2="196" y2="190" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="172" y1="258" x2="158" y2="352" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="172" y1="258" x2="122" y2="292" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="172" y1="258" x2="196" y2="190" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="258" y1="208" x2="300" y2="138" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="258" y1="208" x2="196" y2="190" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="258" y1="208" x2="350" y2="200" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="300" y1="138" x2="350" y2="200" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="334" y1="268" x2="250" y2="322" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="334" y1="268" x2="372" y2="330" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="334" y1="268" x2="392" y2="200" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="334" y1="268" x2="350" y2="200" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="250" y1="322" x2="158" y2="352" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="250" y1="322" x2="302" y2="382" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="158" y1="352" x2="122" y2="292" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="158" y1="352" x2="140" y2="432" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="222" y1="424" x2="302" y2="382" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="222" y1="424" x2="288" y2="464" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="222" y1="424" x2="140" y2="432" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="302" y1="382" x2="372" y2="330" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="302" y1="382" x2="356" y2="462" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="302" y1="382" x2="288" y2="464" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="372" y1="330" x2="430" y2="414" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="392" y1="200" x2="452" y2="148" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="392" y1="200" x2="410" y2="116" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="392" y1="200" x2="350" y2="200" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="452" y1="148" x2="410" y2="116" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="452" y1="148" x2="500" y2="108" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="474" y1="254" x2="498" y2="332" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="474" y1="254" x2="546" y2="196" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="474" y1="254" x2="566" y2="288" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="430" y1="414" x2="356" y2="462" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="430" y1="414" x2="516" y2="420" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="356" y1="462" x2="288" y2="464" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="498" y1="332" x2="566" y2="288" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="498" y1="332" x2="566" y2="380" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="516" y1="420" x2="566" y2="380" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="546" y1="196" x2="566" y2="288" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="546" y1="196" x2="500" y2="108" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="566" y1="288" x2="566" y2="380" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="122" y1="292" x2="140" y2="432" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="410" y1="116" x2="500" y2="108" stroke="#C3CBD1" stroke-width="1.6"/>
+<line x1="112" y1="176" x2="233.77504649279712" y2="202.69042114910621" stroke="#E65100" stroke-width="4"/>
+<polygon points="242.4,204.6 231.8,207.7 234.1,197.3" fill="#E65100"/>
+<line x1="258" y1="208" x2="355.06792640541806" y2="311.8797107145702" stroke="#E65100" stroke-width="4"/>
+<polygon points="361.1,318.3 350.6,314.9 358.4,307.6" fill="#E65100"/>
+<line x1="372" y1="330" x2="473.2031236224068" y2="331.6063987876572" stroke="#E65100" stroke-width="4"/>
+<polygon points="482.0,331.7 472.3,336.9 472.4,326.3" fill="#E65100"/>
+<line x1="498" y1="332" x2="511.0301733435121" y2="395.7030696793924" stroke="#E65100" stroke-width="4"/>
+<polygon points="512.8,404.3 505.7,395.9 516.1,393.8" fill="#E65100"/>
+<circle cx="196" cy="132" r="6.5" fill="#DAE0E5" stroke="#AEB8C0" stroke-width="1.5"/>
+<circle cx="172" cy="258" r="6.5" fill="#DAE0E5" stroke="#AEB8C0" stroke-width="1.5"/>
+<circle cx="300" cy="138" r="6.5" fill="#DAE0E5" stroke="#AEB8C0" stroke-width="1.5"/>
+<circle cx="334" cy="268" r="6.5" fill="#DAE0E5" stroke="#AEB8C0" stroke-width="1.5"/>
+<circle cx="250" cy="322" r="6.5" fill="#DAE0E5" stroke="#AEB8C0" stroke-width="1.5"/>
+<circle cx="158" cy="352" r="6.5" fill="#DAE0E5" stroke="#AEB8C0" stroke-width="1.5"/>
+<circle cx="222" cy="424" r="6.5" fill="#DAE0E5" stroke="#AEB8C0" stroke-width="1.5"/>
+<circle cx="302" cy="382" r="6.5" fill="#DAE0E5" stroke="#AEB8C0" stroke-width="1.5"/>
+<circle cx="392" cy="200" r="6.5" fill="#DAE0E5" stroke="#AEB8C0" stroke-width="1.5"/>
+<circle cx="452" cy="148" r="6.5" fill="#DAE0E5" stroke="#AEB8C0" stroke-width="1.5"/>
+<circle cx="474" cy="254" r="6.5" fill="#DAE0E5" stroke="#AEB8C0" stroke-width="1.5"/>
+<circle cx="430" cy="414" r="6.5" fill="#DAE0E5" stroke="#AEB8C0" stroke-width="1.5"/>
+<circle cx="356" cy="462" r="6.5" fill="#DAE0E5" stroke="#AEB8C0" stroke-width="1.5"/>
+<circle cx="546" cy="196" r="6.5" fill="#DAE0E5" stroke="#AEB8C0" stroke-width="1.5"/>
+<circle cx="566" cy="288" r="6.5" fill="#DAE0E5" stroke="#AEB8C0" stroke-width="1.5"/>
+<circle cx="566" cy="380" r="6.5" fill="#DAE0E5" stroke="#AEB8C0" stroke-width="1.5"/>
+<circle cx="288" cy="464" r="6.5" fill="#DAE0E5" stroke="#AEB8C0" stroke-width="1.5"/>
+<circle cx="122" cy="292" r="6.5" fill="#DAE0E5" stroke="#AEB8C0" stroke-width="1.5"/>
+<circle cx="140" cy="432" r="6.5" fill="#DAE0E5" stroke="#AEB8C0" stroke-width="1.5"/>
+<circle cx="410" cy="116" r="6.5" fill="#DAE0E5" stroke="#AEB8C0" stroke-width="1.5"/>
+<circle cx="500" cy="108" r="6.5" fill="#DAE0E5" stroke="#AEB8C0" stroke-width="1.5"/>
+<circle cx="196" cy="190" r="6.5" fill="#DAE0E5" stroke="#AEB8C0" stroke-width="1.5"/>
+<circle cx="350" cy="200" r="6.5" fill="#DAE0E5" stroke="#AEB8C0" stroke-width="1.5"/>
+<circle cx="258" cy="208" r="9.5" fill="#FFF3E0" stroke="#E65100" stroke-width="3"/>
+<circle cx="372" cy="330" r="9.5" fill="#FFF3E0" stroke="#E65100" stroke-width="3"/>
+<circle cx="498" cy="332" r="9.5" fill="#FFF3E0" stroke="#E65100" stroke-width="3"/>
+<circle cx="516" cy="420" r="9.5" fill="#FFF3E0" stroke="#E65100" stroke-width="3"/>
+<circle cx="112" cy="176" r="12" fill="#E6F2FF" stroke="#1565C0" stroke-width="3.5"/>
+<text x="116" y="154" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#1565C0">入口点 s</text>
+<polygon points="566.0,445.0 570.5,455.8 582.2,456.7 573.3,464.4 576.0,475.8 566.0,469.6 556.0,475.8 558.7,464.4 549.8,456.7 561.5,455.8" fill="#C62828"/>
+<text x="570" y="504" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#C62828">查询 q</text>
+<line x1="516" y1="420" x2="560" y2="454" stroke="#C62828" stroke-width="2" stroke-dasharray="5,5"/>
+<text x="201.0" y="182.0" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="17" font-weight="700" fill="#E65100">①</text>
+<text x="331.0" y="259.0" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="17" font-weight="700" fill="#E65100">②</text>
+<text x="451.0" y="321.0" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="17" font-weight="700" fill="#E65100">③</text>
+<text x="523.0" y="366.0" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="17" font-weight="700" fill="#E65100">④</text>
+<text x="327" y="500" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#8A9199">越走越近，直到没有邻居比当前点更接近 q</text>
+<rect x="638" y="84" width="320" height="258" rx="16" fill="#F1F3F5" stroke="#546E7A" stroke-width="3"/>
+<text x="798" y="122" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="19" font-weight="700" fill="#546E7A">每一步只做三件事</text>
+<text x="660" y="168" text-anchor="start" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="15" font-weight="400" fill="#666666">① 从候选池取距 q 最近的未访问点</text>
+<text x="660" y="208" text-anchor="start" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="15" font-weight="400" fill="#666666">② 展开它的邻居，逐一计算距离</text>
+<text x="660" y="248" text-anchor="start" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="15" font-weight="400" fill="#666666">③ 候选池只保留最近的 L 个</text>
+<line x1="660" y1="288" x2="936" y2="288" stroke="#C3CBD1" stroke-width="1.5"/>
+<text x="798" y="318" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="14" font-weight="400" fill="#8A9199">L 越大，召回越高，也越慢</text>
+<rect x="638" y="366" width="320" height="148" rx="16" fill="#FFF3E0" stroke="#E65100" stroke-width="3"/>
+<text x="798" y="404" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#E65100">于是全部学问只剩一件事</text>
+<text x="798" y="452" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="27" font-weight="700" fill="#E65100">边，到底怎么连？</text>
+<text x="798" y="487" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="13.5" font-weight="400" fill="#666666">这就是 HNSW / NSG / Vamana 的分野</text>
+<text x="500.0" y="560" text-anchor="middle" font-family="PingFang SC, Hiragino Sans GB, Helvetica, Arial, sans-serif" font-size="16" font-weight="700" fill="#333333">检索算法三家完全一致；差异全部发生在建图阶段</text>
+</svg>

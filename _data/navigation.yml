@@ -6,5 +6,8 @@ main:
   - title: "Publications"
     url: /publications/
     
+  - title: "Blogs"
+    url: /blogs/
+
   - title: "Misc"
     url: /misc/

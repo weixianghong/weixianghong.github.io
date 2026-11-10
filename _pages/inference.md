@@ -12,7 +12,7 @@ excerpt: "学到哪里 写到哪里 未完待续 敬请指教"
 
 <header class="series-heading">
 {% assign series_minutes = site.posts | where: 'series', 'inference' | map: 'read_time_minutes' | sort %}
-<span class="series-kicker">{{ site.data.inference_series.chapters.size }} 篇中文笔记 · 每篇约 {{ series_minutes.first }}–{{ series_minutes.last }} 分钟</span>
+<span class="series-kicker">5 篇中文笔记 · 每篇约 {{ series_minutes.first }}–{{ series_minutes.last }} 分钟</span>
 <h2>{{ site.data.inference_series.title }}</h2>
 <p>{{ site.data.inference_series.subtitle | escape | newline_to_br }}</p>
 </header>

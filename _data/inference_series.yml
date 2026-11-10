@@ -29,3 +29,13 @@ chapters:
     subtitle: Context Engineering & Harness Engineering
     topic: KV Cache · Agent
     url: /blogs/inference-kv-cache/
+  - number: "06"
+    title: 从 LLM 到 Agent
+    subtitle: RAG、工具调用和 MCP
+    topic: Tools · MCP
+    url: /blogs/from-llm-to-agent/
+  - number: "07"
+    title: Agent 的 Harness
+    subtitle: Skill、记忆和任务验证
+    topic: Skills · Harness
+    url: /blogs/agent-harness/

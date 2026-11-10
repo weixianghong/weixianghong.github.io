@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 272" role="img" aria-labelledby="agent-loop-title agent-loop-desc">
+  <title id="agent-loop-title">模型和运行时怎样配合</title>
+  <desc id="agent-loop-desc">第一次调用模型得到搜索请求。应用运行搜索工具，再把结果送入第二次模型调用。</desc>
+  <defs>
+    <marker id="agent-loop-arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path class="art-arrow" d="M0 0L8 4L0 8Z"/></marker>
+  </defs>
+  <rect class="art-accent" x="20" y="28" width="240" height="76" rx="12"/>
+  <rect class="art-box" x="380" y="28" width="240" height="76" rx="12"/>
+  <rect class="art-soft" x="380" y="166" width="240" height="76" rx="12"/>
+  <rect class="art-accent" x="20" y="166" width="240" height="76" rx="12"/>
+  <g text-anchor="middle" font-size="22">
+    <text x="140" y="59">模型 · 第一次调用</text>
+    <text x="500" y="59">运行时</text>
+    <text x="500" y="197">搜索工具</text>
+    <text x="140" y="197">模型 · 下一次调用</text>
+  </g>
+  <g class="art-muted" text-anchor="middle" font-size="17">
+    <text x="140" y="85">提出搜索请求</text>
+    <text x="500" y="85">检查参数和权限</text>
+    <text x="500" y="223">返回文件和行号</text>
+    <text x="140" y="223">读结果，选下一步</text>
+    <text x="320" y="188">结果回传</text>
+  </g>
+  <g class="art-line" marker-end="url(#agent-loop-arrow)">
+    <path d="M262 66H374"/>
+    <path d="M500 106V160"/>
+    <path d="M378 204H266"/>
+  </g>
+</svg>

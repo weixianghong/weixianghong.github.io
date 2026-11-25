@@ -3,6 +3,7 @@ title: "一辆 2022 Highlander 的全屏 CarPlay 研究：从 iPhone 日志到 G
 date: 2026-11-25
 permalink: /blogs/highlander-fullscreen-carplay-research/
 lang: zh-CN
+hidden_from_blog: true
 read_time: true
 read_time_minutes: 35
 excerpt: "为什么一块 12.3 英寸超宽屏，CarPlay 只能用大约 62%？从实车测量、iPhone sysdiagnose、丰田 DCU/ICS/MEU 架构，到维修手册、GVIF、Beat-Sonic 和产品化路线，一份仍在进行中的研究记录。"

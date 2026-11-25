@@ -1,0 +1,11 @@
+/* Highlander research log: diagrams stay readable on narrow displays */
+.hl-figure { margin: 1.5rem 0 1.75rem; padding: 0.75rem; overflow-x: auto; border: 1px solid #d9e0e8; border-radius: 10px; background: #fff; }
+.hl-figure img { display: block; width: 100%; min-width: 720px; max-width: none !important; height: auto; margin: 0 auto; }
+.hl-figure figcaption { margin: .7rem .2rem .15rem; font-size: .85em; color: #526078; line-height: 1.6; }
+.hl-note { border-left: 3px solid #94a3b8; padding: .6rem 1rem; margin: 1.1rem 0; background: #f8fafc; }
+.hl-tldr { padding: 1.15rem 1.35rem; margin: 1.2rem 0 2rem; border: 1px solid #cbd5e1; border-radius: 11px; background: #f8fafc; }
+.hl-tldr h2 { margin-top: .1rem; }
+.hl-tldr p { margin: .7rem 0; }
+.hl-status { font-size: .93em; color: #475569; }
+.hl-table { overflow-x: auto; }
+@media (max-width: 840px) { .hl-figure {padding: .45rem;} .hl-figure img { min-width: 700px; } .hl-tldr {padding:.85rem 1rem;} }

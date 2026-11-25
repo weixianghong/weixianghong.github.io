@@ -1,115 +1,128 @@
 ---
-title: "一辆 2022 Highlander 的全屏 CarPlay 研究：从 iPhone 日志到 GVIF、TIS 和产品化"
+title: "Highlander 12.3 英寸全屏 CarPlay｜研究日志（持续更新）"
 date: 2026-11-25
 permalink: /blogs/highlander-fullscreen-carplay-research/
 lang: zh-CN
 hidden_from_blog: true
+extra_css: /assets/css/highlander-research.css
 read_time: true
-read_time_minutes: 35
-excerpt: "为什么一块 12.3 英寸超宽屏，CarPlay 只能用大约 62%？从实车测量、iPhone sysdiagnose、丰田 DCU/ICS/MEU 架构，到维修手册、GVIF、Beat-Sonic 和产品化路线，一份仍在进行中的研究记录。"
-tags:
-  - carplay
-  - reverse-engineering
-  - automotive
-  - toyota
-  - embedded-systems
-  - product-engineering
+read_time_minutes: 30
+excerpt: "2022 Highlander 12.3 英寸 CarPlay 全屏项目内部研究日志：实车数据、iPhone 日志、TIS/GVIF 拓扑、路线决策和待执行实验。"
+tags: [carplay, toyota, automotive-research, gvif, embedded-systems]
 ---
 
-一辆 2022 款 Toyota Highlander Limited，原厂 12.3 英寸 JBL 多媒体系统，支持 Apple CarPlay。听起来挺好，直到我把手机接上去：**这么宽的一块屏幕，CarPlay 只能占左边大约六成，剩下的部分永远留给丰田自己的界面。**
+*内部研究日志 · 研究对象：2022 Highlander Limited / 12.3″ JBL Premium Audio · 截止日期：2026-11-25 · 状态：进行中 · **Unlisted**（不出现在博客列表，但 URL 可公开访问）*
 
-一开始我想解决的就是这个恼人的 UI 问题。后来越查越深，牵扯出 iPhone 的 CarPlay 视频协商、Panasonic 主机、DENSO 多显示屏控制器、Toyota TIS 维修资料、GVIF 高速串行视频，以及一条可能利用国内供应链做成产品的路线。我甚至专门买下了这辆车，把它作为后续实验平台。
+<div class="hl-tldr" markdown="1">
 
-这篇是截至 **2026 年 11 月 25 日**的完整研究记录，而不是一份已经成功解锁的教程。写得比较细，一方面方便以后自己接着做，另一方面也想把那些“看起来很合理，后来却发现证据不够”的判断原样保留下来。
+## TL;DR / 当前状态
 
-**当前状态：DCU-only 暂停，等 Toyota 诊断设备到货后继续验证；外部视频接入 R-EXT 保留为主线备选。尚未实现原生全屏 CarPlay。**
+**问题：** 原厂 12.3″ 屏幕的 CarPlay 只能使用约 **62% 的屏幕宽度**，希望实现 **原生全宽 UI**，不是把画面横向拉伸。后续目标是开发可量产的低成本产品，不仅改好这一辆车。
 
-**目录**
+**已实测：** LCD 发光区 **290×110 mm**，CarPlay **180×110 mm**；iPhone 日志显示车机协商 **800×480 px / 183×109 mm**，H.264 也以 **800×480** 编码；`ViewAreas: Disabled`。原厂导航/Audio/Settings/CarPlay 只能分屏和左右换位，Trip 可以全屏。
 
-1. [问题究竟是什么：全屏不等于拉伸](#goal)
-2. [车上的硬件：DCU、MEU、ICS 与屏幕](#hardware)
-3. [最初的实车实验：哪些页面能全屏](#field)
-4. [从 iPhone sysdiagnose 抓到的 CarPlay 参数](#ioslog)
-5. [Smart Display Zoom 的一次误导](#zoom)
-6. [拿尺子量：62.07% 从何而来](#geometry)
-7. [沿着丰田维修手册还原视频链路](#topology)
-8. [H1a、H1b、H1c：我们为什么反复修改架构判断](#hypotheses)
-9. [第一次路线收敛：从 DCU-only 转向 R-EXT](#route-shift)
-10. [Beat-Sonic HVXT06：一个很有用但不是 CarPlay 的盒子](#hvxt06)
-11. [R-EXT 的完整技术方案与未解难题](#rext)
-12. [为什么不直接重写原厂固件](#firmware)
-13. [第二次转折：TIS 审计重新打开 DCU-only](#audit)
-14. [S0 实车 Service Menu：把三个打码项找出来](#service-menu)
-15. [下一轮 D0：Techstream、MFC3 与停止条件](#diagnostics)
-16. [从改装一辆车到产品：ODM 与国内供应链](#product)
-17. [证据表、已知问题与项目时间线](#status)
-18. [资料来源、术语与下一步](#references)
+**已确认的链路：** Toyota TIS/EWD 中存在 `MEU→DCU→ICS→DISP` 的 GVIF 视频路径；ICS 参与画面合成。**尚未确定的是 DCU 是否能产生全宽帧，或者是否能正常请求 ICS 将主多媒体内容全屏。**
+
+**最新实验：** S0 车机 Service Menu 两页全部核对，找出 `Camera Setting`、`Repro info`、`Version` 三个在资料截图里看不清的项目；未发现显式 CarPlay 全屏开关。此前根据照片透视猜测菜单宽度变化的结论**已撤回**。
+
+**下一动作：** DCU-only **hold**，等待 **Opus IVS Mongoose-Plus Toyota3/MFC3（$575，已选定）** 到货，用 Techstream/GTS 做一次**只读** ECU 配置审计，重点补齐 DCU `Customize Parameters` 缺页。在拿到结果前，不买 HVXT06，也不执行 GVIF 跳线旁路。
+
+**备选产品路线：** R-EXT（外部 CarPlay 接收器 + 原厂 GVIF 链路视频接入），优先调研国内 ODM。Beat-Sonic HVXT06 已从**官方安装手册**核实其 GVIF 串接方式和 Full 24:9 显示模式，但它**不是 CarPlay 接收器，不能运行我们的代码，也不进入最终 BOM**。
+
+</div>
+
+**导航 / 目录（固定锚点）**
+
+1. [目标、边界与验收定义](#goal)
+2. [实车硬件基线：DCU / MEU / ICS / DISP](#hardware)
+3. [E0b 实测：显示模式矩阵](#field)
+4. [E0 日志：CarPlay 协商与 H.264](#ioslog)
+5. [E0-A/B：Smart Display Zoom](#zoom)
+6. [E0b-1：物理尺寸与 62.07%](#geometry)
+7. [TIS/EWD：视频、控制与音频链路](#topology)
+8. [H1a/H1b/H1c：待验证的三种架构](#hypotheses)
+9. [决策记录：DCU-only 与 R-EXT](#route-shift)
+10. [X0-0：HVXT06 官方手册拆解](#hvxt06)
+11. [R-EXT：视频、触控、音频的技术任务](#rext)
+12. [固件路线：可研究，不作为首版默认方案](#firmware)
+13. [D0-1：TIS 离线诊断项审计](#audit)
+14. [S0：Service Menu 实车补证](#service-menu)
+15. [D0-2：MFC3 / Techstream 待执行计划](#diagnostics)
+16. [产品路线：国内 ODM 与交付要求](#product)
+17. [事实、未决项与时间线](#status)
+18. [参考资料和续研入口](#references)
+
+**记录约定：** `[实测]` = 本车或 iPhone 原始数据；`[TIS]` = 已保存的 Toyota 原件索引、部分摘录由 Claude 审计；`[手册]` = 已核对的第三方厂商 PDF；`[推断]` = 合乎现有数据但尚未证明；`[待测]` = 设计中的实验。所有示意图均不作为未经验证的电气接线指令。
 
 ---
-
 <a id="goal"></a>
-## 1. 问题究竟是什么：全屏不等于拉伸
+## 1. 目标、边界与验收定义
 
-这辆车的屏幕横向很长。正常使用时，中间是一个主内容区，旁边是丰田的侧栏。CarPlay、原厂地图、音乐等内容可以在左右两边交换，但无法真正占据整块屏幕。
+### Scope
 
-这里有三种容易混淆的“全屏”：
+| 项目 | 当前定义 |
+|---|---|
+| 目标车辆 | 2022 Highlander Limited，原厂 12.3″ Premium Audio / JBL |
+| 症状 | CarPlay 始终局限在 180 mm 主区，左右可以互换但不能真正全屏 |
+| 产品目标 | 保留原厂屏幕，iPhone 为全宽显示区域直接生成 CarPlay UI |
+| 排除项 | 横向拉伸 16:9、裁切填满、单纯更换 iPhone 截图尺寸 |
+| 原厂功能约束 | 触摸、音频、Siri/电话、倒车、空调、方向盘交互、掉电恢复必须经过验收 |
+| 改装边界 | 不主动向动力/ADAS CAN 注入未知消息；不将 Toyota 专有固件分发作为产品方案 |
 
-| 类型 | 看起来发生了什么 | 是否满足目标 |
-|---|---|---|
-| 把 16:9 或近似普通比例的视频横向拉宽 | 元素变胖、圆形变椭圆 | **不满足** |
-| 对窄幅图像裁切放大，强行铺满 | 比例可能正常，但文字、边缘内容丢失 | **不满足** |
-| iPhone/CarPlay 接收端一开始就按照超宽区域生成 UI | 导航、Dock、地图等元素重新布局 | **这才是目标** |
+**成功判据 S1–S4：** S1 画面覆盖完整 LCD 有效区；S2 CarPlay 接收器协商的逻辑画布本身为宽幅比例（例如 8:3）；S3 原厂触摸输入能正确驱动 CarPlay 且不误触后台；S4 音频、通话、语音、重要原厂提示和故障回退正常。
 
-最终希望拿到的不是一张“看起来占满屏幕的 HDMI 画面”，而是一个可以日常使用的系统：原厂屏幕保留，CarPlay 原生超宽布局，触控准确，音乐、电话、Siri、方向盘按键可用，原厂空调和倒车影像正常，设备出现异常时还能安全回到丰田原始界面。
-
-更长远地说，目标也不只是给我自己的车装一个盒子，而是探索一套能利用国内电子方案商和线束供应链量产、价格合理的产品。买车是为了获得可重复实验的环境，不代表最终每辆客户车都要做同样复杂的逆向工作。
-
-**研究边界**也很明确：优先诊断、被动监听和可逆信息娱乐接口；不向动力或 ADAS CAN 注入未知消息，不把绕过安全启动或分发 Toyota 专有固件作为产品路线；所有改装都需要验证倒车和必要车辆提示的回退。
+**未证明的前提：** LCD 原生像素可能是 1920×720，但我们从未直接测量。后续所有使用 1920×720 的地方均是示例，而不是屏幕已确认规格。
 
 <a id="hardware"></a>
-## 2. 车上的硬件：DCU、MEU、ICS 与屏幕
+## 2. 实车硬件基线：DCU / MEU / ICS / DISP
 
-先认清我们究竟在和哪几块电脑打交道。我最初以为“车机”就是屏幕后面的一块主板。实际不是。
+### Vehicle / ECU inventory
 
-| 组件 | 在这辆车中的角色 | 已知信息 |
+| 单元 | 实物或资料记录 | 职责 / 备注 |
 |---|---|---|
-| DCU / Radio Receiver | 主多媒体主机，处理 CarPlay、音源和车辆多媒体交互 | Panasonic，Model ID `17TDTENA-DA30`；P/N `86120-0E420`；Audio `1225` |
-| MEU / Navigation ECU | 原厂导航扩展模块 | Model ID `17TMTENA-DA50`；P/N `86840-0E075`；Nav `1225` |
-| ICS / Integration Control Sub-assembly | TMOT / Multi-display 系统中的图像合成、操作界面控制模块 | DENSO 体系；T-SB-0055-22 出现更换件号 `840C2-48010`，尚非本车实物标签确认 |
-| DISP / Multi-display | 真正的 12.3 英寸 LCD/显示组件 | 实际 LCD 像素数仍未知 |
-| JBL 放大器 | 原车音频输出 | DCU 与功放之间涉及 MOST |
+| DCU / Radio Receiver | Panasonic；P/N `86120-0E420`；Model ID `17TDTENA-DA30`；Audio `1225` | CarPlay 端点、主多媒体、原车音频 |
+| MEU / Navigation ECU | P/N `86840-0E075`；Model ID `17TMTENA-DA50`；Nav `1225` | 导航扩展模块 |
+| ICS / Integration Control | DENSO TMOT；TSB 中更换件号 `840C2-48010` | 图像合成；该件号尚未通过本车 ICS 标签独立确认 |
+| DISP / Multi-display | 原厂 12.3″；发光区 290×110 mm | LCD 原生分辨率未知 |
+| JBL 放大器 | 由 DCU 的 MOST 音频链路管理 | R-EXT 音频对接不能简单假定有 AUX 引脚 |
 
-DCU、MEU 的具体零件号后来在 Service Menu 的 `Product Information` 中重新拍照核实。**没有把芯片唯一序列号、VIN、个人设备 ID 或未经脱敏的 sysdiagnose 上传到公开博客。**
+**证据：** DCU、MEU 的 P/N 后来由实车 `Product Information` 菜单照片再次核对；ICS 件号仅记录为适用 TSB 的替换件，不是实车拆机读标。
 
-还有两个常见误认需要记下来：
+**命名陷阱：** iPhone 枚举的 `CV-RT29N04J` 是 CarPlay 设备标识，不能当 Toyota 零件号。HID 字段 `20.2.14` 也不能冒充车机完整固件版本。服务菜单中的 Audio/Nav 版本记录为 `1225`。
 
-- iPhone 识别到的 `CV-RT29N04J` 是 CarPlay 端点的 modelName，不是已核实的 Toyota 维修零件号。
-- 某处 HID 信息中的 `20.2.14` 不能当作整套车机的固件版本；车机自己显示的是 Audio/Nav `1225`。
-
-这套架构大致属于 2019 年末至 2022 年 10 月生产期间使用的老平台；后来的 Toyota Audio Multimedia 是另一代设计，不能直接把 2023+ 的软件更新方式或改装产品套过来。
+**平台边界：** 研究的是旧款 12.3″ TMOT 架构；不能把 2023+ Toyota Audio Multimedia 的界面、更新方式和改装设备直接套用。
 
 <a id="field"></a>
-## 3. 最初的实车实验：哪些页面能全屏
+## 3. E0b 实测：显示模式矩阵
 
-最开始做的事情很朴素：在停车状态下把每种界面都打开、左右交换、观察边界，然后用 iPhone 生成截图。
+### Input / Steps
 
-| 测试 | 观察 | 直接说明了什么 |
-|---|---|---|
-| CarPlay 正常连接 | 画面只占约六成宽 | 有稳定的固定内容窗口 |
-| 左右交换 CarPlay 和 Toyota 侧栏 | 左右位置改变，尺寸不变 | 换边不是全屏 |
-| Trip Information | 可以分屏、左右交换，也可以占满整块屏幕 | 车上确实存在全屏显示模式 |
-| Trip 全屏遮住 CarPlay 后在手机上切歌 | iPhone 侧 CarPlay 截图仍能反映状态变化 | 会话和 UI 状态仍在更新 |
-| 原厂导航 / Audio / Settings | 都能左右交换，却不能全屏 | 限制不是 CarPlay 独有 |
-| 原厂普通设置页面 | 没找到全屏 CarPlay 开关 | 用户菜单没有显式入口 |
+停在 P 挡，分别打开 CarPlay、原厂导航、Audio、Settings、Trip。记录“左/右互换”“是否存在全屏动作”“全屏时是否保留其它 UI”。E0b-3 的文字清晰度微距对比因判别力低而**主动跳过**。
 
-这里有一个非常重要的逻辑区别：**Trip 能全屏，不能直接证明 CarPlay 所在的 DCU 视频通路也能全屏；但它证明显示器和原厂系统至少有一种全宽工作模式。**
+| 源界面 | 左右互换 | 全屏 | 结果 |
+|---|---|---|---|
+| CarPlay | 是 | **否** | 固定主显示区域 |
+| Toyota 原厂导航 | 是 | **否** | 与 CarPlay 同类布局限制 |
+| Audio / Radio | 是 | **否** | 同上 |
+| Settings | 是 | **否** | 同上 |
+| Trip Information | 是 | **是** | 唯一已观察到的此类全屏状态 |
 
-同样，CarPlay 在 Trip 后面还能更新状态，不等于我已经测量到隐藏期间每一帧 H.264 都持续传输。前者是实测，后者是还需要抓包或日志的假设。
+<figure class="hl-figure">
+<img src="{{ '/assets/images/highlander/01-window-modes.svg' | relative_url }}" alt="实测 CarPlay 左右两种布局和 Trip 全屏，按 290 毫米发光宽度绘制" loading="lazy">
+<figcaption>图 1 · 按实测 290/180/110 mm 绘制；不是屏幕实际像素图。</figcaption>
+</figure>
+
+### Interpretation
+
+- `[实测]` Trip 全屏证明这台车存在至少一种完整 LCD 有效区的视频显示状态。
+- `[实测]` 原厂导航等不能全屏，因此“只是 iPhone / CarPlay 限制”的解释过于简单。
+- `[未知]` Trip 是哪块 ECU 最终绘制像素，DCU 送出的 GVIF 是否为全宽帧。
+- 在 Trip 遮住 CarPlay 的过程中，iPhone 侧截图仍反映音乐状态变化；**未抓到该时段连续的视频帧统计**，不应扩大解释。
 
 <a id="ioslog"></a>
-## 4. 从 iPhone sysdiagnose 抓到的 CarPlay 参数
+## 4. E0 日志：CarPlay 协商与 H.264
 
-单靠目测争不出底层事实。我在 **2026-11-24 19:35 PST** 左右生成了一份 iPhone sysdiagnose，在 Mac 上用统一日志工具解码，得到约 7,581 行的 CarPlay 相关日志。第一份解码文本保存在本地 `~/Desktop/carplay_logs.txt`。
+**采集方法：** 我在 **2026-11-24 19:35 PST** 左右生成了一份 iPhone sysdiagnose，在 Mac 上用统一日志工具解码，得到约 7,581 行的 CarPlay 相关日志。第一份解码文本保存在本地 `~/Desktop/carplay_logs.txt`。
 
 这一轮真正关键的是下面几组记录。时间均为太平洋标准时间，行号对应当时保存的解码文本。
 
@@ -147,61 +160,51 @@ dimension = 800 x 480
 - 该显示端点标称最高 30 FPS；不要把初始化参数当成每秒实际帧数的统计。
 - 日志 FeatureKey 里出现过 `viewAreas` 字样，但最终 `CarPlay ViewAreas: Disabled`，不能只截取前一句就宣称 Toyota 已经支持动态分区。
 
-这一步把一个很容易犯的错误排除了：**iPhone 屏幕截图的像素数、UI 逻辑画布、H.264 编码分辨率、车上 LCD 的原生像素数，是四个不同层次。** 其中 LCD 原生像素数直到现在都没有直接量到。
+**结论：** §972×584§ 是 Zoom ON 时的 UI 画布，而本次采集的实际 H.264 编码器初始化仍为 §800×480§。§[未知]§ LCD 原生像素、最终放大倍率与谁执行合成。
 
 <a id="zoom"></a>
-## 5. Smart Display Zoom 的一次误导
+## 5. E0-A/B：Smart Display Zoom
 
-我们还测试了 iOS 的 Smart Display Zoom。它刚好说明为什么“截图尺寸变了”不等于“车屏显示区域变了”。
+### A/B 实验
 
-| Smart Display Zoom | CarPlay 截图尺寸 | 车上 CarPlay 物理窗口 |
+| 操作 | iPhone 保存的 CarPlay 截图 | 车上 CarPlay 有效区域 |
 |---|---:|---|
-| ON | `972×584` | 不变 |
-| OFF | `800×480` | 不变 |
+| Smart Display Zoom ON | 972×584 px | 180×110 mm，不变 |
+| Smart Display Zoom OFF | 800×480 px | 180×110 mm，不变 |
 
-我最初看到 972×584，差点以为车机其实能接收更大的画面。随后核对 H.264 初始化日志，发现 **Zoom ON 时编码器仍是 800×480**。Zoom 调的是 iPhone 内部 UI 密度和缩放效果，并没有突破 Toyota 预留的物理窗口。
+**观察：** 关闭 Zoom 后图标大小与 UI 排版密度发生变化，车屏窗口边界不变。原 sysdiagnose 的 ON 状态记录里，H.264 编码器是 800×480；OFF 状态**没有第二份单独的编码初始化日志**。
 
-严谨一点：我们对 OFF 状态保留了截图和车屏观察，没有独立采到第二次 OFF 状态 H.264 初始化日志，因此不能凭推测把它写成第二次编码器实测。
-
-这条路就此排除：**在 iPhone 上折腾显示缩放，不是 Toyota 全屏解锁。**
+**判断：** `[实测]` Smart Display Zoom 不是本车全屏开关。此分支已停止。
 
 <a id="geometry"></a>
-## 6. 拿尺子量：62.07% 从何而来
+## 6. E0b-1：物理尺寸与 62.07%
 
-随后做了一个很有帮助、但完全不需要高级设备的实验：尺量发光区域。
+### 几何核对
 
-| 区域 | 实测 |
-|---|---:|
-| 全部发光区域 | **290 × 110 mm** |
-| CarPlay 有效窗口 | **180 × 110 mm** |
-| 其余 Toyota 侧栏 | 约 110 mm 宽（由两者相减） |
-
-于是 CarPlay 占屏幕宽度：
+| 来源 | 宽 × 高 | 状态 |
+|---|---|---|
+| 实车发光区域 | **290 × 110 mm** | `[实测]` |
+| 实车 CarPlay 区域 | **180 × 110 mm** | `[实测]` |
+| iPhone 收到的 `ScreenPhysicalSize` | **183 × 109 mm** | `[日志]` |
+| iPhone 收到的 `ScreenPixelSize` | **800 × 480** | `[日志]` |
 
 $$
-\frac{180}{290}\times100\%\approx\boxed{62.07\%}
+\text{CarPlay 占宽}=\frac{180}{290}=62.07\%,\qquad \frac{290}{110}\approx2.636
 $$
 
-而 sysdiagnose 中的物理尺寸声明是 **183×109**，与尺量的 180×110 mm 只有几毫米误差。很自然的解释是：DCU 告诉 iPhone 的物理显示区域，就是我们肉眼看到的窄窗口，而不是整个 LCD。
+物理宽高比接近 8:3；尺量与 iPhone 收到的 183×109 mm 也基本一致。这解释了为什么原厂 CarPlay 的界限如此稳定。
 
-我们曾提出一个漂亮的几何猜想：
+<figure class="hl-figure">
+<img src="{{ '/assets/images/highlander/02-carplay-resolution.svg' | relative_url }}" alt="Smart Display Zoom UI 画布、H264 编码器和车屏物理窗口的不同层级" loading="lazy">
+<figcaption>图 2 · 三种尺寸分别来自 UI、编码和尺量，不能互相替代。</figcaption>
+</figure>
 
-<pre>
-假设 LCD 像素是 1920 × 720
-CarPlay 视频是  800 × 480
-各向放大 1.5 倍 → 1200 × 720
-1200 / 1920 = 62.5%
-实际尺量占宽 = 62.07%
-</pre>
-
-两个数字非常接近，但我不把它记成“LCD 已确认 1920×720”。它只是一个能解释现象的模型。真实像素数、谁在缩放、是不是严格 1.5 倍，仍需面板标签、像素计数或视频抓取。
-
-值得注意的是，我们用 290/110 得到的物理宽高比约为 **2.636:1**，很接近通常说的 **8:3（2.667:1）**。后面的外部接收器设计会多次用到这个比例，但“8:3 是目标布局”和“1920×720 是已知面板原生像素”不能画等号。
+**待验证的缩放模型（绝不作为事实）：** 如果屏幕原生为 1920×720，并且将 800×480 放大 1.5 倍，则主视频会成为 1200×720，占全屏 62.5%。它与 62.07% 的实测很接近，但**不能证明 LCD 是 1920×720，更不能证明缩放发生在 ICS 还是 DCU**。
 
 <a id="topology"></a>
-## 7. 沿着丰田维修手册还原视频链路
+## 7. TIS/EWD：视频、控制与音频链路
 
-为了确定该改哪块设备，我们整理了此前通过 Toyota TIS 订阅合法取得的维修资料：Repair Manual（RM）、Electrical Wiring Diagram（EWD）、New Car Features（NCF）与 Technical Service Bulletin（TSB）。这些原件保存在研究项目里，下面列出的是文档编号与工程摘要，不转载原厂受版权保护的大段内容。
+**输入：** 已合法保存的 Toyota RM、EWD、NCF、TSB 资料包（并非完整订阅镜像）。这一节记录拓扑与对应 Doc ID，所有端子接线前必须返回原始 EWD 核对。
 
 从资料看，系统主要视频路径是：
 
@@ -219,6 +222,11 @@ iPhone ── USB CarPlay ──► DCU / Radio Receiver
 
 停车辅助 ECU ── 独立摄像头输入 ──► Display
 </pre>
+
+<figure class="hl-figure">
+<img src="{{ '/assets/images/highlander/03-ecu-topology.svg' | relative_url }}" alt="MEU、DCU、ICS、DISP 与 MOST、摄像头及 AVC-LAN 的连接关系" loading="lazy">
+<figcaption>图 3 · 根据 TIS/EWD 摘要绘制的逻辑拓扑。虚线是控制概念，不是已解析报文。</figcaption>
+</figure>
 
 几条值得精确存档的连接（**只作研究索引，不作为免核图直接接线的指令**）：
 
@@ -239,63 +247,56 @@ ICS 的安装位置在中央扶手箱下方，而不是我最开始想象的“�
 另外，触控的传输路径尚未确认。AVC-LAN 的确连接这些模块，但 GVIF 的反向控制机制也不能凭空排除。倒车摄像头有独立输入也**不意味着**改接 GVIF 后所有倒车场景一定安全，最终必须逐项验证。
 
 <a id="hypotheses"></a>
-## 8. H1a、H1b、H1c：我们为什么反复修改架构判断
+## 8. H1a/H1b/H1c：待验证的三种架构
 
-整个项目最值得记录的，不是某个“确定结论”，反而是我们如何几次发现自己推论得太早。
+### Working hypotheses
 
-| 假设 | 核心说法 | 需要什么证据才能坐实 |
-|---|---|---|
-| **H1a** | DCU 本身输出一幅宽画面，ICS 主要转发/辅助合成 | 抓到 DCU→ICS 的真实宽幅视频 |
-| **H1b** | DCU 提供窄主画面，ICS 负责左右分屏与全宽合成 | 视频抓取或明确显示模式控制归属 |
-| **H1c** | DCU 与 ICS 分工协作，DCU 可能请求不同布局，ICS 负责最终显示 | 抓到相应控制消息与输出变化 |
+| ID | 机制 | 能解释什么 | 仍缺什么 |
+|---|---|---|---|
+| **H1a** | DCU 输出完整宽幅画面，ICS 主要承接/叠加 | Trip 可能源于 MEU→DCU；CarPlay 窗口限制也可能由 DCU UI 决定 | DCU→ICS 的真实视频帧 |
+| **H1b** | DCU 主要输出较窄主内容，ICS 最终布局、合成并铺到 LCD | NCF 明确写 ICS 合成 DCU 画面和空调等页面 | Trip 全宽时视频路径如何变化 |
+| **H1c** | DCU 和 ICS 协作，存在模式请求或按源切换不同视频配置 | 既保留 ICS 合成职责，也允许 DCU 参与全屏控制 | AVC-LAN/其他控制消息与视频同步证据 |
 
-### 第一阶段：偏向 H1b
+<figure class="hl-figure">
+<img src="{{ '/assets/images/highlander/04-architecture-hypotheses.svg' | relative_url }}" alt="DCU 主导、ICS 主导和混合架构三种工作假设" loading="lazy">
+<figcaption>图 4 · 三种假设都未排除；画面中的块长不是已测量的帧宽。</figcaption>
+</figure>
 
-最早我们看到：CarPlay、原厂导航、Audio、Settings 全都受窄窗口限制，而 Trip 可以全屏。再叠加 NCF 明确写 ICS 会合成画面，很自然地得出“ICS 管最终布局”的工作模型，于是把 DCU-only 暂时归档。
+### 重要的两次纠错
 
-后来回看，**这一步把“ICS 参与合成”扩大解释成“DCU 不可能拥有全屏视频输出或模式请求能力”**。后半句并没有得到证明。
+**第一次（2026-11-24）：** 看到 CarPlay / 原厂导航 / Audio 只在窄窗口、Trip 却能全屏，又读到 ICS 的图像合成说明，于是把 H1b 当成强支持、提前归档 DCU-only。问题是，**“ICS 参与合成”不等于“DCU 不能输出全宽或请求全屏”**。
 
-### 第二阶段：Trip 的归属让 DCU-only 重新浮出水面
+**第二次（2026-11-25）：** TIS 故障诊断将 Trip / Energy Monitor 的功能问题主要归到 MEU，而 MEU 通过 DCU 发送视频。于是 H1a/H1c 重新成为合理候选。但“MEU 被列为故障责任件”**仍不能严格推出**“Trip 最终每个像素都由 MEU 经 DCU 输出”，因为数据归属与 UI 合成归属可能不同。
 
-2026-11-25 的一次 TIS 审计发现：
-
-- `RM100000001M537` 中，Trip、Energy Monitor、History 等功能故障诊断多次指向 Navigation ECU（MEU）。
-- `RM100000001M50V` 显示 MEU 的视频经 GVIF 先进 DCU。
-- 原厂新车功能资料 `NM100000001MHH8` 明确描述全屏与分屏两种 screen mode。
-
-于是出现了一个相反的可能：既然 Trip 关联 MEU，而 MEU 视频通往 DCU，或许 **DCU 本身输出的是宽画面**，或者 **DCU 有权请求 ICS 将某种内容全屏**。
-
-这条思路足以把 H1a、H1c 重新放回桌面，但也有一个逻辑漏洞：维修手册的“Trip 功能故障要检查 MEU”，**不严格等于**“Trip 页面上的每个像素都由 MEU 绘制，再完整作为视频穿过 DCU”。也可能存在数据与最终 UI 绘制分离。
-
-所以，我现在不想再靠“某 ECU 在故障排查表里出现几次”决定架构。真正可靠的答案，最终要来自诊断状态、控制消息或 GVIF 视频测量。
-
-**当前结论：H1a/H1b/H1c 都未被排除；ICS 参与合成是有文字依据的，DCU 是否可以驱动全屏仍未知。**
+**当前判定：** `[文档]` ICS 参与合成；`[实测]` Trip 可全屏；`[未知]` 画面尺寸和控制权在 DCU/ICS 之间如何分配。暂停凭 UI 截图给 H1a/H1b 打概率分数。
 
 <a id="route-shift"></a>
-## 9. 第一次路线收敛：从 DCU-only 转向 R-EXT
+## 9. 决策记录：DCU-only 与 R-EXT
 
-讨论中逐渐形成了两条路线。
+### 2026-11-24：第一次路线决策
 
-**DCU-only**：不更换原车显示链路，只通过 DCU 的配置、现有控制协议或必要的软件改动，使原系统把 CarPlay 改成全宽输出。如果存在合法、稳定、可逆的配置入口，这条路线最优雅：硬件 BOM 很低，安装也可能最容易。
+| 路线 | 核心改动 | 成功前提 | 当前 |
+|---|---|---|---|
+| DCU-only / 原厂配置解锁 | 只改 DCU 可见配置、受支持的模式请求或软件行为 | DCU 有办法产生/请求全宽 CarPlay，且能有可部署入口 | **hold，待 D0-2** |
+| R-EXT | 在最终 GVIF 视频链路接入外部超宽 CarPlay | 搞定 GVIF、触控、双向音频、安全回退 | **保留研发主线** |
 
-**R-EXT（External Video Injection）**：把外部 CarPlay 接收器产生的超宽视频，在靠近 LCD 的最后一段视频链路接入，避开原厂 DCU 固定的 CarPlay 窗口。代价是必须解决高速视频转换、触控、音频、模式切换、故障回退。
-
-在我们一度偏向 H1b 时，DCU-only 被归档，R-EXT 成为主线。后来 TIS 审计重新打开了 DCU-only 的可能性，所以目前两条路线的关系是：
-
-> **先用有边界的 D0 排查低成本原厂控制入口；没有可用入口，再把研发资源集中投入 R-EXT。**
-
-这里的“暂停”只是研发排期，既不意味着已经证实 DCU-only 不可能，也不是要无限期逆向两套 Toyota 固件。
+此前因 H1b 被高估，DCU-only 曾被过早归档。D0-1 审计后撤回这一判断。两条路线不是互斥产品理念：**先用一次有界诊断验证原厂解锁，再决定是否投入外部硬件**。
 
 <a id="hvxt06"></a>
-## 10. Beat-Sonic HVXT06：一个很有用但不是 CarPlay 的盒子
+## 10. X0-0：HVXT06 官方手册拆解
 
-R-EXT 最初最大的不确定性是：Toyota 原厂 GVIF 视频有没有现成的外部输入接口？
+**X0-0 的目标：** 不买硬件，先通过官方安装手册判断视频到底插在 DCU→ICS 还是 ICS→DISP 一侧，确定 HVXT06 是否能作为 R-EXT 的视频验证工具。
 
 我们查到 [Beat-Sonic HVXT06](https://www.beatsonicusa.com/pages/manuals)，面向特定 Toyota/Venza/Highlander 12.3 英寸原厂显示屏，官方标价当时约 **649 美元**。这个价格对做一个大众化产品并不理想，但作为研发参照物非常有价值。
 
 后来最关键的一步，是实际取得并阅读它的[官方三页安装手册](https://drive.google.com/file/d/1zQh9EW9msPQ6yVCuKz2qJVeekw1Eeo1g/view)。
 
-### 10.1 我们从手册里真正确认了什么
+<figure class="hl-figure">
+<img src="{{ '/assets/images/highlander/05-beatsonic-insertion.svg' | relative_url }}" alt="HVXT06 通过两条 GVIF 线串在屏幕前，并通过 Cable A 连接 DCU" loading="lazy">
+<figcaption>图 5 · HVXT06 官方手册第 1–3 页的连接与 24:9 模式摘要；并非实车安装照片。</figcaption>
+</figure>
+
+### 10.1 官方手册确认项
 
 - 两条附带 GVIF Cable 用于把 HVXT06 **串入车辆视频线与 Display Monitor 之间**，不是简单地从 iPhone USB 里改几个 CarPlay 参数。
 - 另外的 `Cable A` 插在 Radio Receiver 背面指定的**最左侧 28-pin 接头**，用于配合原车交互/音频集成；误接到其他看似相同的接头，手册警告可能损坏设备。
@@ -343,7 +344,12 @@ Toyota 12.3" Display
 **HVXT06 是参考和验证工具，不进入未来产品 BOM；截至本文也尚未购买或安装它。**
 
 <a id="rext"></a>
-## 11. R-EXT 的完整技术方案与未解难题
+## 11. R-EXT：视频、触控、音频的技术任务
+
+<figure class="hl-figure">
+<img src="{{ '/assets/images/highlander/06-rext-branches.svg' | relative_url }}" alt="使用 HVXT06 的研发路线和自研或 ODM GVIF 的产品路线" loading="lazy">
+<figcaption>图 6 · R-EXT-A 是验证路线，R-EXT-B/ODM 才可能成为低成本产品；均未实车完成。</figcaption>
+</figure>
 
 R-EXT 拆成两个分支：
 
@@ -398,24 +404,26 @@ HVXT06 手册说明音频可通过原厂音响播放，这给了音频接入的�
 倒车摄像头虽然有独立路径，产品仍必须对倒车、启动、断电、热重启、故障切换逐项验收。这比“HDMI 能亮起来”重要得多。
 
 <a id="firmware"></a>
-## 12. 为什么不直接重写原厂固件
+## 12. 固件路线：可研究，不作为首版默认方案
 
-另一个很自然的问题是：既然有 DCU、ICS 两块电脑，为什么不直接逆向它们，写一套新的全屏系统？
+### 路线决策记录
 
-技术上当然可以研究，**但“能够读取/分析某份固件”与“能够安全、合法、低成本地向客户销售修改后的车机固件”是完全不同的问题**。
+本阶段不把“给客户刷 Panasonic / DENSO 固件”作为产品基本路径，**并不是因为已证明技术上做不到**。主要是交付成本、车型兼容、更新/回滚、失误风险与授权责任在产品场景里不可控。
 
-Toyota 的旧平台存在通过 TIS 提供的 `.kwi` 软件包对 DCU/MEU 更新的维修流程；ICS 故障的 TSB 以更换件为处理方式，现有材料没有列出同等现场升级流程。**没有公开更新步骤不等于已经证明 ICS 硬件不可能更新。** 同样，没有实测安全启动验证之前，不应该断言“肯定有签名”或者“肯定能绕过”。
+| 事实或假设 | 当前状态 |
+|---|---|
+| DCU/MEU 存在经 Toyota TIS 提供 `.kwi` 软件包的官方更新历史 | `[TIS/TSB]` |
+| ICS 故障 TSB 使用更换件处理，未看到同等现场升级流程 | `[TIS/TSB]`；**不等于硬件绝无升级机制** |
+| 本车 Secure Boot、镜像签名实现及可否自行刷写 | `[未知]`；不以“车规通常有签名”充当实测 |
+| 即使重写 DCU，仍可能需要适配 ICS 的显示控制 | `[推断]` |
+| 产品销售涉及固件许可、版权和反规避合规 | 上市前法律审查项，不能仅凭个人研究例外判断 |
 
-如果直接把 DCU 系统整体替换掉，还要接管收音机、MOST 功放、AVC-LAN 主机、车辆设置、方向盘、电信与麦克风、导航 MEU、CarPlay 认证等职责。即使软件团队完成这些内容，也没自动解决 ICS 的布局权限。
-
-产品层面更麻烦：车型与版本兼容、刷写失败的恢复、客户车辆保修、后续 Toyota 更新，以及固件知识产权与 DMCA 反规避条款。美国法律对合法车主的诊断、维修和部分互操作研究有特定例外，但**不能推导出企业可以无条件分发破解工具或 Toyota 专有镜像**；商业化必须单独做法律审查。
-
-所以我把“自有备用 ECU 上的只读研究”保留为技术储备，不把“给每个客户刷两块 Toyota 固件”当作第一代产品的默认路线。
+**保留：** 自有备用件上的只读固件分析、正常诊断接口探索；**不做：** 将分发第三方专有固件或绕过原厂安全机制设为默认商业路线。若 D0-2 意外找到正常的布局配置，这条“低 BOM”路线优先级会重新提高。
 
 <a id="audit"></a>
-## 13. 第二次转折：TIS 审计重新打开 DCU-only
+## 13. D0-1：TIS 离线诊断项审计
 
-在准备买外部视频设备时，我还是不甘心：如果原车已经有 Trip 全屏模式，会不会存在一个可以通过诊断、配置或者合法控制命令打开的宽屏模式？先把这个便宜而优雅的方向彻底检查一次，才好意思放弃。
+**目的：** 完成 DCU-only 的低成本最终验证第一段：离线审计现有 TIS 原件是否列有全屏布局选项、Data List 状态、可用的控制接口。
 
 因此在 **2026-11-25**，我们对已保存的 TIS RM/NCF/EWD/TSB 进行了 D0-1 离线审计。特别要记住：**当年下载的 TIS 资料包明确不是完整镜像**，有些章节没有保存。审计的“没找到”只代表这份资料包或相应可见菜单没有，不代表 Toyota 内部系统绝对不存在。
 
@@ -457,9 +465,14 @@ Trip / Energy Monitor 的症状排查条目指向 MEU；MEU 的图像线路又�
 D0-1 的结论可以简洁地写成：**没有找到公开的软件全屏开关，但也没有找到证明 DCU-only 技术上不可能的证据。**
 
 <a id="service-menu"></a>
-## 14. S0 实车 Service Menu：把三个打码项找出来
+## 14. S0：Service Menu 实车补证
 
-离线资料的某些维修界面截图有被遮盖的菜单项。既然车已经买下来了，我们决定亲自进 Service Menu 看一遍。
+**实验目的：** TIS 服务菜单截图有三项被遮挡。实车确认其名称，审计全部可见页，不写入任何配置。
+
+<figure class="hl-figure">
+<img src="{{ '/assets/images/highlander/08-service-menu.svg' | relative_url }}" alt="依据车内照片重绘的 Service Menu 和 Function Check Setting 两页菜单" loading="lazy">
+<figcaption>图 7 · 用户实车照片的菜单结构重绘：Camera Setting、Repro info、Version 均已识别。</figcaption>
+</figure>
 
 2026-11-25 的实车照片确认：
 
@@ -478,7 +491,14 @@ D0-1 的结论可以简洁地写成：**没有找到公开的软件全屏开关�
 S0 的有效结论非常有限、但很扎实：**可见的原厂 Service Menu 已检查，没有显式的 CarPlay 全屏开关；DCU 的内部宽帧能力仍未知。**
 
 <a id="diagnostics"></a>
-## 15. 下一轮 D0：Techstream、MFC3 与停止条件
+## 15. D0-2：MFC3 / Techstream 待执行计划
+
+**采购/执行状态：** 设备型号已选定，尚未收到 GTS 实车读取结果。执行窗口是 MFC3 到货之后，**当前 DCU-only 处于 hold**。
+
+<figure class="hl-figure">
+<img src="{{ '/assets/images/highlander/07-d0-decision.svg' | relative_url }}" alt="D0-1 TIS、S0 菜单、D0-2 GTS 和最终决定的流程" loading="lazy">
+<figcaption>图 8 · D0 是有停止条件的诊断研究，不是无限期追查隐藏固件代码。</figcaption>
+</figure>
 
 S0 结束后，下一步是用真正的 Toyota 诊断工具读取 ECU 配置。
 
@@ -511,9 +531,9 @@ S0 结束后，下一步是用真正的 Toyota 诊断工具读取 ECU 配置。
 因此我们目前把 **DCU-only 暂时 hold 住，等 MFC3 到货，跑完 GTS/Techstream 的只读诊断再做决定**。
 
 <a id="product"></a>
-## 16. 从改装一辆车到产品：ODM 与国内供应链
+## 16. 产品路线：国内 ODM 与交付要求
 
-花 649 美元买一个日本品牌 HDMI 输入盒子，再买一个 CarPlay 接收器，给自己车上试验也许没问题。但如果目标是性价比高、可大规模销售的产品，不能把这一套零售价直接堆成 BOM。
+**产品原则：** 不把 HVXT06 的 649 美元零售价当产品 BOM。优先寻找掌握 Toyota/Lexus GVIF 接入的国内 ODM，必要时自主开发触控和控制模块。当前仍处于供应商验证之前；没有“已找到可量产方案商”的证据。
 
 我更感兴趣的是能否找到深圳或其他国内方案商，直接做一块满足需求的板卡。
 
@@ -545,7 +565,7 @@ Nifty City、某些 Lexus/Toyota 旧款 CarPlay 改装盒提供了供应链线�
 **“能让屏幕亮起来”只是电子原型；“客户装上能放心用”才是产品。**
 
 <a id="status"></a>
-## 17. 证据表、已知问题与项目时间线
+## 17. 事实、未决项与时间线
 
 ### 17.1 目前已经真正验证的事实
 
@@ -594,7 +614,7 @@ Nifty City、某些 Lexus/Toyota 旧款 CarPlay 改装盒提供了供应链线�
 另外，原计划的 E0b-3“拍照比较文字清晰度”因为证据价值低被主动跳过；E0b-4 的 T1–T9 加第二份 sysdiagnose、E0b-5 MMR、E0b-6 重启观察都**没有执行**，不能因为写进实验清单就记为完成。
 
 <a id="references"></a>
-## 18. 资料来源、术语与下一步
+## 18. 参考资料和续研入口
 
 ### 18.1 我把哪些材料当成什么等级的证据
 
@@ -605,7 +625,9 @@ Nifty City、某些 Lexus/Toyota 旧款 CarPlay 改装盒提供了供应链线�
 - **原厂诊断与认证资料入口**：[Toyota TIS / Techstream](https://techinfo.toyota.com/)、[Apple MFi Program](https://mfi.apple.com/)。
 - **公开逆向参考**：[AVCLAN-Mockingboard](https://github.com/halleysfifthinc/AVCLAN-Mockingboard)。其年代和使用场景与本车不同。
 
-这篇不是设备选型广告，也不是兼容性承诺。有很多变量依然未知，特别是 **真正的 GVIF 视频时序、触控返回通道、LCD 真实像素和合法 CarPlay 超宽接收模块**。
+**内部原件索引（不公开个人诊断原始包）：** 本地 `~/Desktop/carplay_logs.txt`；Toyota TIS 的 RM/NCF/EWD/TSB 原件；实车 S0 照片；Beat-Sonic `Manual-HVXT06.pdf`。这些原件可能带有个人或设备标识，博客仅保留无敏感信息的摘录。
+
+这篇不是兼容性承诺。有很多变量依然未知，特别是 **真正的 GVIF 视频时序、触控返回通道、LCD 真实像素和合法 CarPlay 超宽接收模块**。
 
 ### 18.2 最后的项目状态
 

@@ -1,11 +1,32 @@
-/* Highlander research log: diagrams stay readable on narrow displays */
-.hl-figure { margin: 1.5rem 0 1.75rem; padding: 0.75rem; overflow-x: auto; border: 1px solid #d9e0e8; border-radius: 10px; background: #fff; }
+/* Highlander private research log: honor the site's light/dark theme variables. */
+.hl-figure {
+  margin: 1.5rem 0 1.75rem;
+  padding: .75rem;
+  overflow-x: auto;
+  border: 1px solid var(--border, #d9e0e8);
+  border-radius: 10px;
+  background: #fff; /* SVG diagrams intentionally have a fixed light canvas. */
+}
 .hl-figure img { display: block; width: 100%; min-width: 720px; max-width: none !important; height: auto; margin: 0 auto; }
 .hl-figure figcaption { margin: .7rem .2rem .15rem; font-size: .85em; color: #526078; line-height: 1.6; }
-.hl-note { border-left: 3px solid #94a3b8; padding: .6rem 1rem; margin: 1.1rem 0; background: #f8fafc; }
-.hl-tldr { padding: 1.15rem 1.35rem; margin: 1.2rem 0 2rem; border: 1px solid #cbd5e1; border-radius: 11px; background: #f8fafc; }
-.hl-tldr h2 { margin-top: .1rem; }
+.hl-note { border-left: 3px solid var(--border-strong, #94a3b8); padding: .6rem 1rem; margin: 1.1rem 0; background: var(--surface, #f8fafc); color: var(--text, inherit); }
+.hl-tldr {
+  padding: 1.15rem 1.35rem;
+  margin: 1.2rem 0 2rem;
+  border: 1px solid var(--border-strong, #cbd5e1);
+  border-radius: 11px;
+  background: var(--surface, #f8fafc);
+  color: var(--text, inherit);
+  color-scheme: normal;
+}
+.hl-tldr h2 { margin-top: .1rem; color: inherit; }
 .hl-tldr p { margin: .7rem 0; }
-.hl-status { font-size: .93em; color: #475569; }
+.hl-tldr strong { color: inherit; }
+.hl-tldr code { color: inherit; }
+.hl-status { font-size: .93em; color: var(--muted, #475569); }
 .hl-table { overflow-x: auto; }
-@media (max-width: 840px) { .hl-figure {padding: .45rem;} .hl-figure img { min-width: 700px; } .hl-tldr {padding:.85rem 1rem;} }
+@media (max-width: 840px) {
+ .hl-figure { padding: .45rem; }
+ .hl-figure img { min-width: 700px; }
+ .hl-tldr { padding: .85rem 1rem; }
+}

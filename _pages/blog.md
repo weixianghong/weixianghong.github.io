@@ -13,6 +13,7 @@ author_profile: true
 {% assign written_year = '' %}
 {% assign listed_series_keys = '' %}
 {% for post in site.posts %}
+{% if post.hidden_from_blog %}{% continue %}{% endif %}
 {% assign series_definition = site.data.blog_series[post.series] %}
 {% if series_definition %}
   {% assign series_key = post.series | prepend: '|' | append: '|' %}

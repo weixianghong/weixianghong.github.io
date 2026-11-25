@@ -25,7 +25,7 @@ tags: [carplay, toyota, automotive-research, gvif, embedded-systems]
 
 **最新实验：** S0 车机 Service Menu 两页全部核对，找出 `Camera Setting`、`Repro info`、`Version` 三个在资料截图里看不清的项目；未发现显式 CarPlay 全屏开关。此前根据照片透视猜测菜单宽度变化的结论**已撤回**。
 
-**下一动作：** DCU-only **hold**，等待 **Opus IVS Mongoose-Plus Toyota3/MFC3（$575，已选定）** 到货，用 Techstream/GTS 做一次**只读** ECU 配置审计，重点补齐 DCU `Customize Parameters` 缺页。在拿到结果前，不买 HVXT06，也不执行 GVIF 跳线旁路。
+**下一动作：** DCU-only **hold**，等待 **Opus IVS Mongoose-Plus Toyota3/MFC3（$575，已下单）** 到货，用 Techstream/GTS 做一次**只读** ECU 配置审计，重点补齐 DCU `Customize Parameters` 缺页。在拿到结果前，不买 HVXT06，也不执行 GVIF 跳线旁路。
 
 **备选产品路线：** R-EXT（外部 CarPlay 接收器 + 原厂 GVIF 链路视频接入），优先调研国内 ODM。Beat-Sonic HVXT06 已从**官方安装手册**核实其 GVIF 串接方式和 Full 24:9 显示模式，但它**不是 CarPlay 接收器，不能运行我们的代码，也不进入最终 BOM**。
 
@@ -160,7 +160,7 @@ dimension = 800 x 480
 - 该显示端点标称最高 30 FPS；不要把初始化参数当成每秒实际帧数的统计。
 - 日志 FeatureKey 里出现过 `viewAreas` 字样，但最终 `CarPlay ViewAreas: Disabled`，不能只截取前一句就宣称 Toyota 已经支持动态分区。
 
-**结论：** §972×584§ 是 Zoom ON 时的 UI 画布，而本次采集的实际 H.264 编码器初始化仍为 §800×480§。§[未知]§ LCD 原生像素、最终放大倍率与谁执行合成。
+**结论：** `972×584` 是 Zoom ON 时的 UI 画布，而本次采集的实际 H.264 编码器初始化仍为 `800×480`。`[未知]` LCD 原生像素、最终放大倍率与谁执行合成。
 
 <a id="zoom"></a>
 ## 5. E0-A/B：Smart Display Zoom

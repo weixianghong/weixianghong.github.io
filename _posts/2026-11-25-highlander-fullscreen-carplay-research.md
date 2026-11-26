@@ -13,6 +13,45 @@ tags: [carplay, toyota, automotive-research, gvif, embedded-systems]
 
 *内部研究日志 · 研究对象：2022 Highlander Limited / 12.3″ JBL Premium Audio · 截止日期：2026-11-25 · 状态：进行中 · **Unlisted**（不出现在博客列表，但 URL 可公开访问）*
 
+<figure class="hl-figure" id="rext-overview" style="padding: 1rem; overflow: hidden;">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 300" role="img" aria-labelledby="rext-overview-title rext-overview-desc" style="display:block; width:100%; max-width:680px; height:auto; margin:0 auto; color:#1e293b; font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;">
+  <title id="rext-overview-title">R-EXT：外部全宽 CarPlay 视频接入架构</title>
+  <desc id="rext-overview-desc">原厂 DCU 和 MEU 经 ICS 输出 GVIF；iPhone 经外部 CarPlay 接收器输出 HDMI。两路视频进入 HVXT06 或自研视频桥接与切换板，随后经 GVIF 输出至原厂 12.3 英寸显示屏。外部路径为待验证的架构提案。</desc>
+  <rect x="8" y="9" width="144" height="39" rx="6" fill="#f1f5f9" stroke="#64748b"/>
+  <text x="80" y="25" font-size="12" fill="#1e293b" text-anchor="middle" font-weight="600">原厂 DCU / MEU</text>
+  <text x="80" y="39" font-size="10" fill="#475569" text-anchor="middle">原厂车机系统</text>
+  <path d="M80 48 V66" stroke="#64748b" stroke-width="1.5" fill="none"/>
+  <path d="M76 61 L80 67 L84 61" fill="#64748b"/>
+  <rect x="8" y="68" width="144" height="40" rx="6" fill="#f1f5f9" stroke="#64748b"/>
+  <text x="80" y="85" font-size="12" fill="#1e293b" text-anchor="middle" font-weight="600">ICS</text>
+  <text x="80" y="99" font-size="10" fill="#475569" text-anchor="middle">原厂画面合成 / 输出</text>
+  <rect x="192" y="9" width="140" height="39" rx="6" fill="#f0fdf4" stroke="#16a34a"/>
+  <text x="262" y="33" font-size="12" fill="#1e293b" text-anchor="middle" font-weight="600">iPhone</text>
+  <path d="M262 48 V66" stroke="#16a34a" stroke-width="1.5" fill="none"/>
+  <path d="M258 61 L262 67 L266 61" fill="#16a34a"/>
+  <rect x="192" y="68" width="140" height="40" rx="6" fill="#f0fdf4" stroke="#16a34a"/>
+  <text x="262" y="85" font-size="11" fill="#1e293b" text-anchor="middle" font-weight="600">外部 CarPlay Receiver</text>
+  <text x="262" y="99" font-size="10" fill="#166534" text-anchor="middle">生成全宽 CarPlay 画面</text>
+  <path d="M80 108 V153 H114 V169" fill="none" stroke="#64748b" stroke-width="1.5"/>
+  <path d="M110 163 L114 170 L118 163" fill="#64748b"/>
+  <path d="M262 108 V153 H226 V169" fill="none" stroke="#16a34a" stroke-width="1.5"/>
+  <path d="M222 163 L226 170 L230 163" fill="#16a34a"/>
+  <text x="73" y="132" font-size="11" fill="#475569" text-anchor="middle">GVIF</text>
+  <text x="276" y="132" font-size="10" fill="#166534" text-anchor="middle">HDMI</text>
+  <rect x="61" y="170" width="218" height="53" rx="7" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5"/>
+  <text x="170" y="188" font-size="12" font-weight="600" fill="#1e293b" text-anchor="middle">HVXT06 / 自研视频切换板</text>
+  <text x="170" y="205" font-size="11" fill="#166534" text-anchor="middle">R-EXT 核心插入点</text>
+  <path d="M170 223 V252" stroke="#64748b" stroke-width="1.5" fill="none"/>
+  <path d="M166 246 L170 253 L174 246" fill="#64748b"/>
+  <text x="192" y="240" font-size="10" fill="#475569" text-anchor="middle">GVIF</text>
+  <rect x="52" y="254" width="236" height="38" rx="6" stroke="#64748b" fill="#f1f5f9"/>
+  <text x="170" y="270" font-size="12" fill="#1e293b" font-weight="600" text-anchor="middle">原厂 DISP 12.3″ 屏幕</text>
+  <text x="170" y="283" font-size="10" fill="#475569" text-anchor="middle">目标：原生比例全屏 CarPlay</text>
+</svg>
+<figcaption><strong>R-EXT · 全屏 CarPlay 目标架构（概览）</strong><br>
+灰色为原厂视频路径，绿色为拟接入的外部 CarPlay 路径。切换点位于 ICS → DISP 的 GVIF 链路。此图仅展示视频架构提案，并非已安装或验证的接线图；原生超宽 HDMI 时序、触控、音频、控制及故障回退仍待验证。详见<a href="#rext">第 11 节 R-EXT 技术任务</a>。</figcaption>
+</figure>
+
 <div class="hl-tldr" markdown="1">
 
 ## TL;DR / 当前状态
